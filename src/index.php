@@ -4,6 +4,7 @@
 require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
+require_once('model/UserStorage.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);
@@ -16,4 +17,9 @@ $lv = new LayoutView();
 
 
 $lv->render(false, $v, $dtv);
+
+
+$userStorage = new UserStorage();
+
+$userStorage->readStorageFile();
 
