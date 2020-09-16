@@ -10,20 +10,19 @@ class UserStorage {
   private $users = array();
 
   // Get the contents of the JSON file 
-  public function readStorageFile() {
+  public function __construct() {
     $jsonContents = file_get_contents(self::$storageFile);
     $this->users = json_decode($jsonContents, true);
-
-    //var_dump($this->users); 
-    $this->isUser("Admin");
   }
 
   // checks if user is registered, returns bool
   public function isUser($username) : bool {
     $result = false;
     foreach ($this->users as $user => $value) {      
+
       if ($username == $value["username"]) {
         $result = true;
+        
       }
     }
     return $result;

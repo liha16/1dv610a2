@@ -9,10 +9,13 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-
+	private $user;
 	private $nameWasTooShort = false;
 
-	
+	public function __construct(User $user) {
+		$this->user = $user;
+	  }
+
 
 	/**
 	 * Create HTTP response
@@ -34,6 +37,10 @@ class LoginView {
 			if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
 				$message = "Username is missing";
 			} 
+			if ($this->user->isUser($_POST[self::$name])) { // NO USERNAME
+                $message = "Wrong name or password";
+                echo $this->user->isUser(strlen($_POST[self::$name]));
+            } 
 		}
 		
 		
