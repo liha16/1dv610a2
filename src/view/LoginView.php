@@ -10,50 +10,38 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $user;
+	private $message;
 	private $nameWasTooShort = false;
 
-	public function __construct(User $user) {
+	public function __construct(User $user, $message) {
 		$this->user = $user;
+		$this->message = $message;
 	  }
 
 
 	/**
-	 * Create HTTP response
+	 * Create Form or butto
 	 *
 	 * Should be called after a login attempt has been determined
 	 *
-	 * @return  void BUT writes to standard output and cookies!
+	 * @return  string HTML Form or button
 	 */
-	public function response() {
+	public function response($isLoggedIn) {
 
-		$message = "";
-
-		//TODO THE NEXT CODE SHOULD BE IN ANOTHER MODULE/CLASS!
-
-		if (isset($_POST[self::$login])) { // IS FORM SUBMITTED, controller!?
-			if (strlen($_POST[self::$password]) < 1) { // NO PASSWORD
-				$message = "Password is missing";
-			} 
-			if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
-				$message = "Username is missing";
-			} 
-			if ($this->user->isUser($_POST[self::$name])) { // NO USERNAME
-                $message = "Wrong name or password";
-                echo $this->user->isUser(strlen($_POST[self::$name]));
-            } 
+		if ($isLoggedIn) {
+			$response = $this->generateLogoutButtonHTML($this->message);
+		}
+		else {
+			$response = $this->generateLoginFormHTML($this->message);
 		}
 		
-		
-		
-		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
 		return $response;
 	}
 
 	/**
 	* Generate HTML code on the output buffer for the logout button
 	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
+	* @return void, BUT writes to standard output!
 	*/
 	private function generateLogoutButtonHTML($message) {
 		return '
@@ -65,9 +53,9 @@ class LoginView {
 	}
 	
 	/**
-	* Generate HTML code on the output buffer for the logout button
+	* Generate HTML code on the output buffer for the login form
 	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
+	* @return void, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML($message) {
 		return '

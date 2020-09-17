@@ -1,7 +1,9 @@
 <?php
 
+
+session_start();
 //INCLUDE THE FILES NEEDED...
-require_once('controller/Authenticate.php');
+require_once('controller/FormHandle.php');
 require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
@@ -17,16 +19,16 @@ ini_set('display_errors', 'On');
 
 $userStorage = new UserStorage(); //Felmeddelanden?
 
+
 $user = new User($userStorage); //Is logged in or not?
 
-$form = new LoginView($user);
+$formHandle = new FormHandle($user);
+$formLayout = new LoginView($user, $formHandle->getMessage());
 $dtv = new DateTimeView();
 $layoutView = new LayoutView();
 
 
-
-
-$layoutView->render(false, $form, $dtv); // Is logged in or not?
+$layoutView->render($user->isLoggedIn(), $formLayout, $dtv); 
 
 
 //$userStorage->isUser("Admin");

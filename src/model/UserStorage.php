@@ -1,6 +1,7 @@
 <?php
 
 //namespace Model;
+//session_start();
 
 // SAVES USERS IN JSON FILE, GETS USER AND SETS TO SESSION
 
@@ -19,10 +20,8 @@ class UserStorage {
   public function isUser($username) : bool {
     $result = false;
     foreach ($this->users as $user => $value) {      
-
       if ($username == $value["username"]) {
         $result = true;
-        
       }
     }
     return $result;
@@ -38,9 +37,27 @@ class UserStorage {
     # code...
   }
 
-  public function authenticateUser()
+  public function authenticateUser($userName,$password) : bool // MOVE TO AUTHENITACE.php??
   {
-    # code... IN ANOTHER CLASS?
+    $result = false;
+    foreach ($this->users as $user => $value) {      
+      if ($userName == $value["username"] && $password == $value["password"]) {
+        $this->saveUserSession($userName);
+        $result = true;
+      }
+    }
+    return $result;
+  }
+
+  private function saveUserSession($userName)
+  {
+    $_SESSION["user"] = $userName;
+  }
+
+  public function destroyUserSession()
+  {
+    unset($_SESSION["user"]);
+    session_destroy(); 
   }
 
 
