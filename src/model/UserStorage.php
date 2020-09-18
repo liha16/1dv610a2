@@ -57,7 +57,6 @@ class UserStorage {
   public function destroyUserSession()
   {
     unset($_SESSION["user"]);
-    session_destroy(); 
   }
 
 

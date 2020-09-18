@@ -2,6 +2,7 @@
 
 
 session_start();
+
 //INCLUDE THE FILES NEEDED...
 require_once('controller/FormHandle.php');
 require_once('view/LoginView.php');
@@ -17,18 +18,24 @@ ini_set('display_errors', 'On');
 
 //CREATE OBJECTS OF THE VIEWS
 
+
+
 $userStorage = new UserStorage(); //Felmeddelanden?
 
 
 $user = new User($userStorage); //Is logged in or not?
 
 $formHandle = new FormHandle($user);
-$formLayout = new LoginView($user, $formHandle->getMessage());
+$formHandle->setMessage();
+$formLayout = new LoginView($user, $formHandle->getMessageCookie());
 $dtv = new DateTimeView();
 $layoutView = new LayoutView();
 
-
 $layoutView->render($user->isLoggedIn(), $formLayout, $dtv); 
+
+
+$formHandle->unsetMessageCookie();
+
 
 
 //$userStorage->isUser("Admin");
