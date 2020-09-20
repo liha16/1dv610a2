@@ -5,7 +5,6 @@
 
 class User {
 
-	private $view;
     private $userStorage;
 
 	public function __construct(UserStorage $userStorage) {
@@ -29,6 +28,16 @@ class User {
 
     public function logoutUser() {
         $this->userStorage->destroyUserSession();
+    }
+
+    public function isRemembered($cookieName) { // is cookie set that rememberes user credentials? 
+        //TODO: COMPARE CREDENTIALS!!!
+        if (isset($_COOKIE[$cookieName])) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

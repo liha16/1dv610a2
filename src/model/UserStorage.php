@@ -1,7 +1,6 @@
 <?php
 
 //namespace Model;
-//session_start();
 
 // SAVES USERS IN JSON FILE, GETS USER AND SETS TO SESSION
 

@@ -13,23 +13,30 @@ class FormHandle {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
     private static $messageId = 'LoginView::Message';
     private $user;
+    private $session;
     
 
-    public function __construct(User $user) {
+    public function __construct(User $user, SessionHandle $session) {
         $this->user = $user;
+        $this->session = $session;
+        
 		
     }
     public function setMessage() { // THIS FUNCTION IS DOING TOO MUCH! SEPARATE COOKIES AND MESSAGE
-   
+        if ($this->isRemembered()) {
+            $message = "Welcome back with cookie";
+            $this->setMessageCookie($message);
+            $_SESSION["user"] = $_COOKIE[self::$cookieName]; // TODO : don't set session here
+            
+        }
         if (isset($_POST[self::$logout])) { // LOG OUT
             $this->user->logoutUser();
             $message = "Bye bye!";
             $this->setMessageCookie($message);
+            $this->unsetLoginCookie();
             header("Location: index.php");
             exit();
         } 
-
-        
         if (isset($_POST[self::$login])) { // IS FORM SUBMITTED
 
             if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
@@ -39,7 +46,12 @@ class FormHandle {
                 $message = "Password is missing";
             } 
             else if ($this->user->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // LOG IN
-                $message = "Welcome";
+                if (isset($_POST[self::$keep])) {
+                    $message = "Welcome and you will be remembered";     
+                    $this->setLoginCookie();
+                } else {
+                    $message = "Welcome";                   
+                }
                 $this->setMessageCookie($message);
                 header("Location: index.php");
                 exit();
@@ -49,36 +61,49 @@ class FormHandle {
             } 
             else  { // WRONG PASSWORD OR USERNAME
                 $message = "Wrong name or password";
-                
             } 
             $this->setMessageCookie($message);
         } 
+    }
 
-        //return $message;
 
+
+    private function isRemembered() {
+        return $this->user->isRemembered(self::$cookieName);
+    }
+
+    private function hashPassword($password) : string {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    private function verifyHashedPassword($hash, $password) : bool {
+        if (password_verify($password, $hash)) {
+            echo 'Password is valid!';
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getMessageCookie() {
-        $message = "";
-
-        if (isset($_SESSION["message"])) {
-            $message = $_SESSION["message"];
-        }
-        return $message;
+        return $this->session->getMessageCookie();
     }
 
     public function unsetMessageCookie() {
-
-        if (isset($_SESSION["message"])) {
-            unset($_SESSION["message"]);
-        }
+        $this->session->unsetMessageCookie();
     }
 
     private function setMessageCookie($message) {
-        $_SESSION["message"] = $message;
-		
+        $this->session->setMessageCookie($message);		
     }
 
+    private function setLoginCookie() {
+        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $this->hashPassword($_POST[self::$password]));
+      }
+
+    private function unsetLoginCookie() {
+        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
+    }
 }
 
 ?>
