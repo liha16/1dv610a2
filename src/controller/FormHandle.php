@@ -22,20 +22,13 @@ class FormHandle {
         
 		
     }
-    public function setMessage() { // THIS FUNCTION IS DOING TOO MUCH! SEPARATE COOKIES AND MESSAGE
+    public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! SEPARATE COOKIES AND MESSAGE
         if ($this->isRemembered()) {
-            $message = "Welcome back with cookie";
-            $this->setMessageCookie($message);
-            $_SESSION["user"] = $_COOKIE[self::$cookieName]; // TODO : don't set session here
+            $this->useRemembered();
             
         }
         if (isset($_POST[self::$logout])) { // LOG OUT
-            $this->user->logoutUser();
-            $message = "Bye bye!";
-            $this->setMessageCookie($message);
-            $this->unsetLoginCookie();
-            header("Location: index.php");
-            exit();
+            $this->doLogout();
         } 
         if (isset($_POST[self::$login])) { // IS FORM SUBMITTED
 
@@ -46,15 +39,7 @@ class FormHandle {
                 $message = "Password is missing";
             } 
             else if ($this->user->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // LOG IN
-                if (isset($_POST[self::$keep])) {
-                    $message = "Welcome and you will be remembered";     
-                    $this->setLoginCookie();
-                } else {
-                    $message = "Welcome";                   
-                }
-                $this->setMessageCookie($message);
-                header("Location: index.php");
-                exit();
+                $this->doLogin();
             } 
             else if ($this->user->isUser($_POST[self::$name])) { // WRONG PASSWORD BUT USER EXSIST
                 $message = "Wrong name or password";
@@ -68,21 +53,44 @@ class FormHandle {
 
 
 
+    private function useRemembered() {
+        $message = "Welcome back with cookie";
+        $this->setMessageCookie($message);
+        $_SESSION["user"] = $_COOKIE[self::$cookieName]; // TODO : don't set session here
+        
+    }
+
+    private function doLogout() {
+        $this->user->logoutUser();
+        $message = "Bye bye!";
+        $this->setMessageCookie($message);
+        $this->unsetLoginCookie();
+        header("Location: index.php");
+        exit();
+    }
+    
+    private function doLogin() {
+        if (isset($_POST[self::$keep])) {
+            $message = "Welcome and you will be remembered";     
+            $this->setLoginCookie();
+        } else {
+            $message = "Welcome";                   
+        }
+        $this->setMessageCookie($message);
+        header("Location: index.php");
+        exit();
+    }
+    
     private function isRemembered() {
         return $this->user->isRemembered(self::$cookieName);
     }
 
     private function hashPassword($password) : string {
-        return password_hash($password, PASSWORD_DEFAULT);
+        return $this->user->hashPassword($password);
     }
 
     private function verifyHashedPassword($hash, $password) : bool {
-        if (password_verify($password, $hash)) {
-            echo 'Password is valid!';
-            return true;
-        } else {
-            return false;
-        }
+        return $this->user->verifyHashedPassword($hash, $password);
     }
 
     public function getMessageCookie() {

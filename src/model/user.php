@@ -40,6 +40,20 @@ class User {
         }
     }
 
+
+    public function verifyHashedPassword($hash, $password) : bool {
+        if (password_verify($password, $hash)) {
+            echo 'Password is valid!';
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function hashPassword($password) : string {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
 }
 
 
