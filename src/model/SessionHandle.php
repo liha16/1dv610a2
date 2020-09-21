@@ -38,8 +38,20 @@ class SessionHandle {
         }
     }
 
+    public function issetMessageCookie() {
+        if (isset($_SESSION["message"])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function setMessageCookie($message) {
         $_SESSION["message"] = $message;
+    }
+
+    public function setUserSession($name) {
+        $_SESSION["user"] = $name;
     }
 
 }

@@ -77,6 +77,8 @@ class LoginView {
 			</form>
 		';
 	}
+
+
 	
 	//GET-FUNCTIONS TO FETCH REQUEST VARIABLES
 	private function getRequestUserName() {

@@ -22,16 +22,23 @@ class FormHandle {
         
 		
     }
-    public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! SEPARATE COOKIES AND MESSAGE
-        if ($this->isRemembered()) {
+
+    /**
+	 * Sets session message and route login/outs
+	 *
+	 * Checks if form is submitted and if user is logged in, then generates a message
+     * @return void, BUT writes to cookies and session!
+	 */
+    public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
+
+        echo $this->hashPassword("Password");
+        if ($this->isRemembered()) { // is cookie with credentials stored previosly?
             $this->useRemembered();
-            
         }
         if (isset($_POST[self::$logout])) { // LOG OUT
             $this->doLogout();
         } 
-        if (isset($_POST[self::$login])) { // IS FORM SUBMITTED
-
+        if (isset($_POST[self::$login])) { // LOGIN FORM SUBMITTED
             if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
                 $message = "Username is missing";
             } 
@@ -52,14 +59,26 @@ class FormHandle {
     }
 
 
-
+    /**
+	 * Sets session message and user if credentials are in cookies
+	 *
+     * @return void, BUT writes to cookies and session!
+	 */
     private function useRemembered() {
-        $message = "Welcome back with cookie";
-        $this->setMessageCookie($message);
-        $_SESSION["user"] = $_COOKIE[self::$cookieName]; // TODO : don't set session here
-        
+        if (!$this->session->issetMessageCookie()) { // Only sets new message if there is not message set already
+            $message = "Welcome back with cookie";
+            $this->setMessageCookie($message);
+        }
+        $this->session->setUserSession($_COOKIE[self::$cookieName]);
+        // TODO : AUTHENTICATE
     }
 
+    /**
+	 * Logs out user and unsets session
+     * Redirects to index.php
+	 *
+     * @return void, BUT writes to cookies and session!
+	 */
     private function doLogout() {
         $this->user->logoutUser();
         $message = "Bye bye!";
@@ -69,8 +88,14 @@ class FormHandle {
         exit();
     }
     
+     /**
+	 * Logs in user and sets session
+     * Redirects to index.php
+	 *
+     * @return void, BUT writes to cookies and session!
+	 */
     private function doLogin() {
-        if (isset($_POST[self::$keep])) {
+        if (isset($_POST[self::$keep])) { // Keep me logged in
             $message = "Welcome and you will be remembered";     
             $this->setLoginCookie();
         } else {

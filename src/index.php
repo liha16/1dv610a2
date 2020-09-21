@@ -6,6 +6,7 @@
 //INCLUDE THE FILES NEEDED...
 require_once('controller/FormHandle.php');
 require_once('view/LoginView.php');
+require_once('view/RegisterView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('model/UserStorage.php');
@@ -28,7 +29,15 @@ $user = new User($userStorage); //Is logged in or not?
 
 $formHandle = new FormHandle($user, $SessionHandle);
 $formHandle->setMessage();
-$formLayout = new LoginView($user, $formHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+
+
+if (isset($_GET['register'])) {
+    $formLayout = new RegisterView($user, $formHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+} else {
+    $formLayout = new LoginView($user, $formHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+
+}
+
 $dtv = new DateTimeView();
 $layoutView = new LayoutView();
 

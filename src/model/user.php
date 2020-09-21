@@ -30,7 +30,12 @@ class User {
         $this->userStorage->destroyUserSession();
     }
 
-    public function isRemembered($cookieName) { // is cookie set that rememberes user credentials? 
+    /**
+	 * Checks if there is a cookie saved with credentials
+	 *
+     * @return bool
+	 */
+    public function isRemembered($cookieName) {
         //TODO: COMPARE CREDENTIALS!!!
         if (isset($_COOKIE[$cookieName])) {
             return true;
@@ -40,7 +45,11 @@ class User {
         }
     }
 
-
+    /**
+	 * Checks if the password and hash matches
+	 *
+     * @return bool
+	 */
     public function verifyHashedPassword($hash, $password) : bool {
         if (password_verify($password, $hash)) {
             echo 'Password is valid!';
