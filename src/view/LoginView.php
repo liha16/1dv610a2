@@ -13,7 +13,7 @@ class LoginView {
 	private $message;
 	private $nameWasTooShort = false;
 
-	public function __construct(Model\User $user, $message) {
+	public function __construct(Model\User $user, string $message) {
 		$this->user = $user;
 		$this->message = $message;
 	  }
@@ -26,7 +26,7 @@ class LoginView {
 	 *
 	 * @return  string HTML Form or button
 	 */
-	public function response($isLoggedIn) {
+	public function response(bool $isLoggedIn) : string {
 
 		if ($isLoggedIn) {
 			$response = $this->generateLogoutButtonHTML($this->message);
@@ -40,9 +40,9 @@ class LoginView {
 	/**
 	* Generate HTML code on the output buffer for the logout button
 	* @param $message, String output message
-	* @return void, BUT writes to standard output!
+	* @return string, html form
 	*/
-	private function generateLogoutButtonHTML($message) {
+	private function generateLogoutButtonHTML(string $message) : string{
 		return '
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
@@ -54,9 +54,9 @@ class LoginView {
 	/**
 	* Generate HTML code on the output buffer for the login form
 	* @param $message, String output message
-	* @return void, BUT writes to standard output!
+	* @return string, html form
 	*/
-	private function generateLoginFormHTML($message) {
+	private function generateLoginFormHTML(string $message) : string {
 		return '
 			<form method="post" > 
 				<fieldset>
@@ -81,7 +81,7 @@ class LoginView {
 
 	
 	//GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
+	private function getRequestUserName() : string {
 
 		$usernameField = "";
 		if (isset($_POST[self::$name])) { // IS FORM SUBMITTED

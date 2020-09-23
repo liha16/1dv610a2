@@ -2,8 +2,6 @@
 
 namespace Model;
 
-// SAVES USERS IN JSON FILE, GETS USER AND SETS TO SESSION
-
 class UserStorage {
 
   private static $storageFile = "model/users.json";
@@ -25,7 +23,7 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function isUser($username) : bool {
+  public function isUser(string $username) : bool {
     $result = false;
     foreach ($this->users as $user => $value) {      
       if ($username == $value["username"]) {
@@ -50,12 +48,11 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function authenticateUser($userName,$password) : bool // MOVE TO AUTHENITACE.php??
+  public function authenticateUser(string $userName, string $password) : bool // MOVE TO AUTHENITACE.php??
   {
     $result = false;
     foreach ($this->users as $user => $value) {      
       if ($userName == $value["username"] && $this->verifyHashedPassword($value["password"], $password)) {
-        $this->saveUserSession($userName); // MOVE THIS PART TO SESSIONHANDLE:PHP AND USE IN FORMHANLDE
         $result = true;
       }
     }
@@ -67,7 +64,7 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function verifyHashedPassword($hash, $password) : bool {
+  public function verifyHashedPassword(string $hash, string $password) : bool {
     if (password_verify($password, $hash)) {
         return true;
     } else {
@@ -83,20 +80,6 @@ class UserStorage {
   public function hashPassword($password) : string {
       return password_hash($password, PASSWORD_DEFAULT);
   }
-
-  private function saveUserSession($userName)  // MOVE THIS PART TO SESSIONHANDLE:PHP 
-  {
-    $_SESSION["user"] = $userName;
-  }
-
-  public function destroyUserSession()  // MOVE THIS PART TO SESSIONHANDLE:PHP 
-  {
-    unset($_SESSION["user"]);
-    $_SESSION["user"] = null;
-
-  }
-
-
 
 
 }

@@ -6,16 +6,17 @@ namespace Model;
 class User {
 
     private $userStorage;
+    
 
 	public function __construct(UserStorage $userStorage) {
 		$this->userStorage = $userStorage;
     }
 
-    public function isUser($userName) : bool {
+    public function isUser(string $userName) : bool {
         return $this->userStorage->isUser($userName);
     }
 
-    public function authenticateUser($userName, $password) : bool {
+    public function authenticateUser(string $userName, string $password) : bool {
         return $this->userStorage->authenticateUser($userName, $password);
     }
 
@@ -41,23 +42,28 @@ class User {
         }
     }
 
-    public function logoutUser() {
-        $this->userStorage->destroyUserSession();
-    }
 
     /**
 	 * Checks if there is a cookie saved with credentials
 	 *
      * @return bool
 	 */
-    public function isRemembered($cookieName) {
-        //TODO: COMPARE CREDENTIALS!
+    public function isRemembered(string $cookieName) : bool {
+        //Future: COMPARE CREDENTIALS!
         if (isset($_COOKIE[$cookieName])) {
             return true;
         }
         else {
             return false;
         }
+    }
+
+    public function hashPassword(string $password) : string {
+        return $this->userStorage->hashPassword($password);
+    }
+
+    public function verifyHashedPassword(string $hash, string $password) : bool {
+        return $this->userStorage->verifyHashedPassword($hash, $password);
     }
 
 

@@ -3,9 +3,9 @@
 
 class LayoutView {
   
-  public function render($isLoggedIn, $v, DateTimeView $dtv) {
+  public function render(bool $isLoggedIn, $v, DateTimeView $dtv) {
     echo '<!DOCTYPE html>
-      <html>
+      <html lang="en">
         <head>
           <meta charset="utf-8">
           <title>Login Example</title>
@@ -25,7 +25,7 @@ class LayoutView {
     ';
   }
   
-  private function renderIsLoggedIn($isLoggedIn) {
+  private function renderIsLoggedIn(bool $isLoggedIn) : string {
     if ($isLoggedIn) {
       return '<h2>Logged in</h2>';
     }
@@ -34,7 +34,7 @@ class LayoutView {
     }
   }
 
-  private function renderRegisterLink() {
+  private function renderRegisterLink() : string {
     if (isset($_GET['register'])) {
       return '<a href="?">Back to login</a>';
     }

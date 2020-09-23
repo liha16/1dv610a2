@@ -16,7 +16,7 @@ class LoginFormHandle {
     private $session;
     
 
-    public function __construct(Model\User $user, Model\SessionHandle $session) {
+    public function __construct(Model\User $user, Model\SessionStorage $session) {
         $this->user = $user;
         $this->session = $session;
         $this->setLogin();
@@ -28,7 +28,7 @@ class LoginFormHandle {
 	 * Checks if form is submitted and if user is logged in, then generates a message
      * @return void, BUT writes to cookies and session!
 	 */
-    public function setLogin() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
+    public function setLogin() { // TODO THIS FUNCTION IS DOING TOO MUCH!
 
         if ($this->isRemembered()) { // is cookie with credentials stored previosly?
             $this->useRemembered();
@@ -66,12 +66,12 @@ class LoginFormHandle {
      * @return void, BUT writes to cookies and session!
 	 */
     private function useRemembered() {
-        if (!$this->session->issetMessageCookie()) { // Only sets new message if there is not message set already
+        if (!$this->session->issetMessageCookie()) {
             $message = "Welcome back with cookie";
             $this->setMessageCookie($message);
         }
         $this->session->setUserSession($_COOKIE[self::$cookieName]);
-        // TODO : AUTHENTICATE
+        // Future: authenticate with cookies
     }
 
     /**
@@ -81,7 +81,7 @@ class LoginFormHandle {
      * @return void, BUT writes to cookies and session!
 	 */
     private function doLogout() {
-        $this->user->logoutUser();
+        $this->session->destroyUserSession();
         $message = "Bye bye!";
         $this->setMessageCookie($message);
         $this->unsetLoginCookie();
@@ -90,7 +90,6 @@ class LoginFormHandle {
     
      /**
 	 * Logs in user and sets session
-     * Redirects to index.php
 	 *
      * @return void, BUT writes to cookies and session!
 	 */
@@ -101,43 +100,49 @@ class LoginFormHandle {
         } else {
             $message = "Welcome";                   
         }
+        $this->session->setUserSession($_POST[self::$name]);
         $this->setMessageCookie($message);
         $this->headerLocation("index.php");
     }
-    
-    private function headerLocation($file) {
+
+
+    /**
+	 * Redirects to a valid path on server
+	 *
+	 */
+    private function headerLocation(string $file) {
         $host  = $_SERVER['HTTP_HOST'];
         $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
         header("Location: http://$host$uri/$file");
         exit();
     }
     
-    private function isRemembered() {
+    private function isRemembered() : bool {
         return $this->user->isRemembered(self::$cookieName);
     }
 
-    private function hashPassword($password) : string {
-        return $this->user->hashPassword($password);
-    }
+    //private function hashPassword(string $password) : string {
+      //  return $this->user->hashPassword($password);
+    //}
 
-    private function verifyHashedPassword($hash, $password) : bool {
-        return $this->user->verifyHashedPassword($hash, $password);
-    }
+    //private function verifyHashedPassword(string $hash, string $password) : bool {
+      //  return $this->user->verifyHashedPassword($hash, $password);
+    //}
 
-    public function getMessageCookie() { // TODO : IS USED?
-        return $this->session->getMessageCookie();
-    }
+   // public function getMessageCookie() : string { // TODO : IS USED?
+    //    return $this->session->getMessageCookie();
+    //}
 
-    public function unsetMessageCookie() {
-        $this->session->unsetMessageCookie();
-    }
+   // public function unsetMessageCookie() {
+    //    $this->session->unsetMessageCookie();
+   // }
 
-    private function setMessageCookie($message) {
+    private function setMessageCookie(string $message) {
         $this->session->setMessageCookie($message);		
     }
 
     private function setLoginCookie() {
-        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $this->hashPassword($_POST[self::$password]));
+        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $this->user->hashPassword($_POST[self::$password]));
       }
 
     private function unsetLoginCookie() {

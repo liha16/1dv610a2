@@ -11,7 +11,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('model/UserStorage.php');
 require_once('model/User.php');
-require_once('model/SessionHandle.php');
+require_once('model/SessionStorage.php');
 
 
 //FOR DEVELOPMENT, UNCOMMENT:
@@ -20,18 +20,18 @@ require_once('model/SessionHandle.php');
 
 
 // Init model classes needed
-$sessionHandle = new \Model\SessionHandle();
+$sessionStorage = new \Model\SessionStorage();
 $userStorage = new \Model\UserStorage();
 $user = new \Model\User($userStorage);
 
 
 // Route
 if (isset($_GET['register'])) { // When url has ?register
-    $registerFormHandle = new RegisterFormHandle($user, $sessionHandle); // get and manage data from form
-    $formLayout = new RegisterView($user, $sessionHandle->getMessageCookie()); // generate form output
+    $registerFormHandle = new RegisterFormHandle($user, $sessionStorage); // get and manage data from form
+    $formLayout = new RegisterView($user, $sessionStorage->getMessageCookie()); // generate form output
 } else { // default page
-    $loginFormHandle = new LoginFormHandle($user, $sessionHandle);// get and manage data from form
-    $formLayout = new LoginView($user, $sessionHandle->getMessageCookie()); // generate form output
+    $loginFormHandle = new LoginFormHandle($user, $sessionStorage);// get and manage data from form
+    $formLayout = new LoginView($user, $sessionStorage->getMessageCookie()); // generate form output
 
 }
 
@@ -41,6 +41,6 @@ $layoutView = new LayoutView();
 $layoutView->render($user->isLoggedIn(), $formLayout, $dtv); 
 
  //Unsets all flash messages
-$sessionHandle->unsetMessageCookie();
+$sessionStorage->unsetMessageCookie();
 
 

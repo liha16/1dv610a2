@@ -10,7 +10,7 @@
         private $user;
 
 
-        public function __construct(Model\User $user, $message) {
+        public function __construct(Model\User $user, string $message) {
             $this->user = $user;
             $this->message = $message;
         }
@@ -19,7 +19,7 @@
          *
          * @return  string HTML Form or button
          */
-        public function response($isLoggedIn) {
+        public function response(bool $isLoggedIn) : string {
             return $this->generateRegisterFormHTML($this->message);
         }
 
@@ -29,7 +29,7 @@
         * @param $message, String output message
         * @return void, BUT writes to standard output!
         */
-        private function generateRegisterFormHTML($message) {
+        private function generateRegisterFormHTML(string $message) : string {
             return '
             <h2>Register new user</h2>
             <form method="post" action="?register" enctype="multipart/form-data"> 
@@ -52,7 +52,7 @@
             ';
         }
 
-        private function getRequestUserName() {
+        private function getRequestUserName() : string {
             $usernameField = "";
 
             if (isset($_POST[self::$name])) {
