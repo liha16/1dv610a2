@@ -1,11 +1,11 @@
 [
         {
             "username":"Admin",
-            "password":"Password"
+            "password":"$2y$10$n/Vp3.nnCZTvpMmZgiGiQuZGubElO8saclSlv4WpRBynSf4q4x1F."
         },
         {
             "username":"Hej",
-            "password":"$2y$10$0k1Hn4dVVzOaEvr/2VFwAu4QTLc9g1NEgaWesXWlVj09TxLJTc6rW"
+            "password":"$2y$10$s6ag6uHZzFbmAlMwsrFLdOkdZ5sWAd.gXOpLlFXC5/9vWMxTp7w26"
         }
 
     ]

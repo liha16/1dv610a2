@@ -54,12 +54,34 @@ class UserStorage {
   {
     $result = false;
     foreach ($this->users as $user => $value) {      
-      if ($userName == $value["username"] && $password == $value["password"]) {
+      if ($userName == $value["username"] && $this->verifyHashedPassword($value["password"], $password)) {
         $this->saveUserSession($userName); // MOVE THIS PART TO SESSIONHANDLE:PHP AND USE IN FORMHANLDE
         $result = true;
       }
     }
     return $result;
+  }
+
+  /**
+	 * Checks if the password and hash matches
+	 *
+   * @return bool
+	 */
+  public function verifyHashedPassword($hash, $password) : bool {
+    if (password_verify($password, $hash)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+   /**
+	 * Hashes a password, returns a hashed version of it
+	 *
+   * @return string
+	 */
+  public function hashPassword($password) : string {
+      return password_hash($password, PASSWORD_DEFAULT);
   }
 
   private function saveUserSession($userName)  // MOVE THIS PART TO SESSIONHANDLE:PHP 
@@ -73,6 +95,8 @@ class UserStorage {
     $_SESSION["user"] = null;
 
   }
+
+
 
 
 }

@@ -18,7 +18,13 @@ class User {
     public function authenticateUser($userName, $password) : bool {
         return $this->userStorage->authenticateUser($userName, $password);
     }
-    public function isLoggedIn() : bool { // CHECK SESSION
+    
+    /**
+	 * Checks if user is logged in
+	 *
+     * @return bool
+	 */
+    public function isLoggedIn() : bool {
         if (isset($_SESSION["user"])) {
             return true;
         } else {
@@ -36,7 +42,7 @@ class User {
      * @return bool
 	 */
     public function isRemembered($cookieName) {
-        //TODO: COMPARE CREDENTIALS!!!
+        //TODO: COMPARE CREDENTIALS!
         if (isset($_COOKIE[$cookieName])) {
             return true;
         }
@@ -45,23 +51,6 @@ class User {
         }
     }
 
-    /**
-	 * Checks if the password and hash matches
-	 *
-     * @return bool
-	 */
-    public function verifyHashedPassword($hash, $password) : bool {
-        if (password_verify($password, $hash)) {
-            echo 'Password is valid!';
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function hashPassword($password) : string {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
 
 }
 
