@@ -1,6 +1,6 @@
 <?php
 
-//namespace Model;
+namespace Model;
 
 // SAVES USERS IN JSON FILE, GETS USER AND SETS TO SESSION
 
@@ -37,12 +37,12 @@ class UserStorage {
 
   public function addUser()
   {
-    # code...
+    # Future functions...
   }
 
   public function deleteUser()
   {
-    # code...
+    # Future functions...
   }
 
   /**

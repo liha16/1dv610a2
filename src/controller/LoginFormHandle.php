@@ -16,9 +16,10 @@ class LoginFormHandle {
     private $session;
     
 
-    public function __construct(User $user, SessionHandle $session) {
+    public function __construct(Model\User $user, Model\SessionHandle $session) {
         $this->user = $user;
         $this->session = $session;
+        $this->setLogin();
     }
 
     /**
@@ -27,7 +28,7 @@ class LoginFormHandle {
 	 * Checks if form is submitted and if user is logged in, then generates a message
      * @return void, BUT writes to cookies and session!
 	 */
-    public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
+    public function setLogin() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
 
         if ($this->isRemembered()) { // is cookie with credentials stored previosly?
             $this->useRemembered();

@@ -1,7 +1,7 @@
 <?php
 
 
-//namespace Model;
+namespace Model;
 
 class User {
 
@@ -18,7 +18,16 @@ class User {
     public function authenticateUser($userName, $password) : bool {
         return $this->userStorage->authenticateUser($userName, $password);
     }
-    
+
+    /**
+	 * Converts to HTML entieties and erases blank spaces
+	 *
+     * @return bool
+	 */
+    public function filterInput(string $input) : string {
+        return trim(htmlentities($input));	
+    }
+
     /**
 	 * Checks if user is logged in
 	 *

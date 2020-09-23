@@ -17,9 +17,10 @@ class RegisterFormHandle {
     private static $passwordMax = 20;
 
 	
-    public function __construct(User $user, SessionHandle $session) {
+    public function __construct(Model\User $user, Model\SessionHandle $session) {
         $this->user = $user;
         $this->session = $session;
+        $this->setRegister();
     }
 
     /**
@@ -27,7 +28,7 @@ class RegisterFormHandle {
 	 *
      * @return void, BUT writes to cookies and session!
 	 */
-    public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
+    public function setRegister() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
         $message = "";
         if (isset($_POST[self::$register])) {
             if (strlen($_POST[self::$name]) < self::$userNameMin && strlen($_POST[self::$password]) < self::$passwordMin) { // TOO SHORT FIELDS

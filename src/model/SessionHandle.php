@@ -1,13 +1,9 @@
 <?php
 
-//namespace Model;
+namespace Model;
 
 class SessionHandle {
 
-    
-	public function __construct() {
-		
-    }
 
     public function setLoginCookie($CookieNameUser, $CookieValueUser, $CookieNamePassword, $CookieValuePassword ) {
         $cookieDuration = 60 * 60 * 24 * 30; // 30 days  

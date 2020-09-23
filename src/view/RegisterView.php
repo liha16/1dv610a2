@@ -10,7 +10,7 @@
         private $user;
 
 
-        public function __construct(User $user, $message) {
+        public function __construct(Model\User $user, $message) {
             $this->user = $user;
             $this->message = $message;
         }
@@ -55,12 +55,13 @@
         private function getRequestUserName() {
             $usernameField = "";
 
-            if (isset($_POST[self::$name])) { // IS FORM SUBMITTED
-                $usernameField = $_POST[self::$name];
+            if (isset($_POST[self::$name])) {
+               $usernameField = $this->user->filterInput($_POST[self::$name]);
             }
-
-            return $usernameField; //RETURN REQUEST VARIABLE: USERNAME
+            return $usernameField;
         }
+
+        
 
     }
 

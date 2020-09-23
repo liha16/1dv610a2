@@ -14,37 +14,33 @@ require_once('model/User.php');
 require_once('model/SessionHandle.php');
 
 
-//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+//FOR DEVELOPMENT, UNCOMMENT:
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
 
 
-$sessionHandle = new SessionHandle();
-$userStorage = new UserStorage(); //Felmeddelanden?
-$user = new User($userStorage); //Is logged in or not?
+// Init model classes needed
+$sessionHandle = new \Model\SessionHandle();
+$userStorage = new \Model\UserStorage();
+$user = new \Model\User($userStorage);
 
 
-
-if (isset($_GET['register'])) {
-    $registerFormHandle = new RegisterFormHandle($user, $sessionHandle);
-    $registerFormHandle->setMessage();
-    $formLayout = new RegisterView($user, $sessionHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
-} else {
-    $loginFormHandle = new LoginFormHandle($user, $sessionHandle);
-    $loginFormHandle->setMessage();
-    $formLayout = new LoginView($user, $sessionHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+// Route
+if (isset($_GET['register'])) { // When url has ?register
+    $registerFormHandle = new RegisterFormHandle($user, $sessionHandle); // get and manage data from form
+    $formLayout = new RegisterView($user, $sessionHandle->getMessageCookie()); // generate form output
+} else { // default page
+    $loginFormHandle = new LoginFormHandle($user, $sessionHandle);// get and manage data from form
+    $formLayout = new LoginView($user, $sessionHandle->getMessageCookie()); // generate form output
 
 }
 
-
+// Load layouts
 $dtv = new DateTimeView();
 $layoutView = new LayoutView();
-
 $layoutView->render($user->isLoggedIn(), $formLayout, $dtv); 
 
-
-//$loginFormHandle->unsetMessageCookie();
-
+ //Unsets all flash messages
 $sessionHandle->unsetMessageCookie();
 
 
