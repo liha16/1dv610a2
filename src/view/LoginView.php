@@ -78,16 +78,19 @@ class LoginView {
 		';
 	}
 
-
 	
-	//GET-FUNCTIONS TO FETCH REQUEST VARIABLES
+	/**
+    * Returns content in specific input field
+    *
+    * @return string, input in form
+    */
 	private function getRequestUserName() : string {
 
 		$usernameField = "";
-		if (isset($_POST[self::$name])) { // IS FORM SUBMITTED
+		if (isset($_POST[self::$name])) {
 			$usernameField = $this->user->filterInput($_POST[self::$name]);
 		}
-		return $usernameField; //RETURN REQUEST VARIABLE: USERNAME
+		return $usernameField;
 	}
 	
 }

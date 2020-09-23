@@ -52,6 +52,11 @@
             ';
         }
 
+        /**
+        * Returns content in specific input field
+        *
+        * @return string, input in form
+        */
         private function getRequestUserName() : string {
             $usernameField = "";
 

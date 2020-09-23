@@ -120,23 +120,7 @@ class LoginFormHandle {
     private function isRemembered() : bool {
         return $this->user->isRemembered(self::$cookieName);
     }
-
-    //private function hashPassword(string $password) : string {
-      //  return $this->user->hashPassword($password);
-    //}
-
-    //private function verifyHashedPassword(string $hash, string $password) : bool {
-      //  return $this->user->verifyHashedPassword($hash, $password);
-    //}
-
-   // public function getMessageCookie() : string { // TODO : IS USED?
-    //    return $this->session->getMessageCookie();
-    //}
-
-   // public function unsetMessageCookie() {
-    //    $this->session->unsetMessageCookie();
-   // }
-
+    
     private function setMessageCookie(string $message) {
         $this->session->setMessageCookie($message);		
     }
