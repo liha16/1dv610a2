@@ -1,4 +1,4 @@
-	<?php
+<?php
 
     class RegisterView {
         private static $messageId = 'RegisterView::Message';
@@ -7,6 +7,9 @@
         private static $passwordR = 'RegisterView::PasswordRepeat';
         private static $register = 'RegisterView::Register';
         private $message;
+        private $user;
+
+
         public function __construct(User $user, $message) {
             $this->user = $user;
             $this->message = $message;
@@ -28,7 +31,8 @@
         */
         private function generateRegisterFormHTML($message) {
             return '
-                <form method="post" > 
+            <h2>Register new user</h2>
+            <form method="post" action="?register" enctype="multipart/form-data"> 
                     <fieldset>
                         <legend>Register a new user - Write username and password</legend>
                         <p id="' . self::$messageId . '">' . $message . '</p>

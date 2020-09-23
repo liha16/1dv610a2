@@ -1,10 +1,10 @@
 <?php
 
-
-
+session_start();
 
 //INCLUDE THE FILES NEEDED...
-require_once('controller/FormHandle.php');
+require_once('controller/LoginFormHandle.php');
+require_once('controller/RegisterFormHandle.php');
 require_once('view/LoginView.php');
 require_once('view/RegisterView.php');
 require_once('view/DateTimeView.php');
@@ -18,25 +18,24 @@ require_once('model/SessionHandle.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
-//CREATE OBJECTS OF THE VIEWS
 
-
-$SessionHandle = new SessionHandle();
+$sessionHandle = new SessionHandle();
 $userStorage = new UserStorage(); //Felmeddelanden?
-
-
 $user = new User($userStorage); //Is logged in or not?
 
-$formHandle = new FormHandle($user, $SessionHandle);
-$formHandle->setMessage();
 
 
 if (isset($_GET['register'])) {
-    $formLayout = new RegisterView($user, $formHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+    $registerFormHandle = new RegisterFormHandle($user, $sessionHandle);
+    $registerFormHandle->setMessage();
+    $formLayout = new RegisterView($user, $sessionHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
 } else {
-    $formLayout = new LoginView($user, $formHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
+    $loginFormHandle = new LoginFormHandle($user, $sessionHandle);
+    $loginFormHandle->setMessage();
+    $formLayout = new LoginView($user, $sessionHandle->getMessageCookie()); // DO I HAVE TO CALL MESSAGE COOKE HERE???
 
 }
+
 
 $dtv = new DateTimeView();
 $layoutView = new LayoutView();
@@ -44,10 +43,8 @@ $layoutView = new LayoutView();
 $layoutView->render($user->isLoggedIn(), $formLayout, $dtv); 
 
 
-$formHandle->unsetMessageCookie();
+//$loginFormHandle->unsetMessageCookie();
 
-
-
-//$userStorage->isUser("Admin");
+$sessionHandle->unsetMessageCookie();
 
 

@@ -70,6 +70,8 @@ class UserStorage {
   public function destroyUserSession()  // MOVE THIS PART TO SESSIONHANDLE:PHP 
   {
     unset($_SESSION["user"]);
+    $_SESSION["user"] = null;
+
   }
 
 

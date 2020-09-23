@@ -2,7 +2,7 @@
 
 //namespace Controller;
 
-class FormHandle {
+class LoginFormHandle {
 
     private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -19,8 +19,6 @@ class FormHandle {
     public function __construct(User $user, SessionHandle $session) {
         $this->user = $user;
         $this->session = $session;
-        
-		
     }
 
     /**
@@ -31,14 +29,15 @@ class FormHandle {
 	 */
     public function setMessage() { // TODO THIS FUNCTION IS DOING TOO MUCH! RENAME
 
-        echo $this->hashPassword("Password");
         if ($this->isRemembered()) { // is cookie with credentials stored previosly?
             $this->useRemembered();
         }
         if (isset($_POST[self::$logout])) { // LOG OUT
-            $this->doLogout();
-        } 
-        if (isset($_POST[self::$login])) { // LOGIN FORM SUBMITTED
+            if ($this->user->isLoggedIn()) {
+                $this->doLogout();
+            } 
+        }
+        if (isset($_POST[self::$login]) && !$this->user->isLoggedIn()) { // LOGIN FORM SUBMITTED
             if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
                 $message = "Username is missing";
             } 
@@ -56,6 +55,7 @@ class FormHandle {
             } 
             $this->setMessageCookie($message);
         } 
+        
     }
 
 
@@ -84,8 +84,7 @@ class FormHandle {
         $message = "Bye bye!";
         $this->setMessageCookie($message);
         $this->unsetLoginCookie();
-        header("Location: index.php");
-        exit();
+        $this->headerLocation("index.php");
     }
     
      /**
@@ -102,7 +101,13 @@ class FormHandle {
             $message = "Welcome";                   
         }
         $this->setMessageCookie($message);
-        header("Location: index.php");
+        $this->headerLocation("index.php");
+    }
+    
+    private function headerLocation($file) {
+        $host  = $_SERVER['HTTP_HOST'];
+        $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        header("Location: http://$host$uri/$file");
         exit();
     }
     
@@ -118,7 +123,7 @@ class FormHandle {
         return $this->user->verifyHashedPassword($hash, $password);
     }
 
-    public function getMessageCookie() {
+    public function getMessageCookie() { // TODO : IS USED?
         return $this->session->getMessageCookie();
     }
 
