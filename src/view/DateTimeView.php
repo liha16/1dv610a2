@@ -1,5 +1,7 @@
 <?php
 
+namespace View;
+
 class DateTimeView {
 
 	// Returns a paragraf element with a date with format:  

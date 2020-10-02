@@ -1,5 +1,7 @@
 <?php
 
+namespace View;
+
     class RegisterView {
         private static $messageId = 'RegisterView::Message';
         private static $name = 'RegisterView::UserName';
@@ -10,7 +12,7 @@
         private $user;
 
 
-        public function __construct(Model\User $user, string $message) {
+        public function __construct(\Model\User $user, string $message) {
             $this->user = $user;
             $this->message = $message;
         }

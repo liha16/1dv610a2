@@ -1,5 +1,7 @@
 <?php
 
+namespace View;
+
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -13,7 +15,7 @@ class LoginView {
 	private $message;
 	private $nameWasTooShort = false;
 
-	public function __construct(Model\User $user, string $message) {
+	public function __construct(\Model\User $user, string $message) {
 		$this->user = $user;
 		$this->message = $message;
 	  }

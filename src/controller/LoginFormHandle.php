@@ -1,6 +1,6 @@
 <?php
 
-//namespace Controller;
+namespace Controller;
 
 class LoginFormHandle {
 
@@ -16,7 +16,7 @@ class LoginFormHandle {
     private $session;
     
 
-    public function __construct(Model\User $user, Model\SessionStorage $session) {
+    public function __construct(\Model\User $user, \Model\SessionStorage $session) {
         $this->user = $user;
         $this->session = $session;
         $this->setLogin();

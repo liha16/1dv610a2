@@ -1,6 +1,6 @@
 <?php
 
-//namespace Controller;
+namespace Controller;
 
 class RegisterFormHandle {
 
@@ -17,7 +17,7 @@ class RegisterFormHandle {
     private static $passwordMax = 20; // For future implementation
 
 	
-    public function __construct(Model\User $user, Model\SessionStorage $session) {
+    public function __construct(\Model\User $user, \Model\SessionStorage $session) {
         $this->user = $user;
         $this->session = $session;
         $this->setRegister();
