@@ -5,7 +5,6 @@ namespace Model;
 class User {
 
     private $userStorage;
-    
 
 	public function __construct(UserStorage $userStorage) {
 		$this->userStorage = $userStorage;
@@ -29,33 +28,33 @@ class User {
     }
 
     /**
-	 * Checks if user is logged in
+	 * Checks if user is logged in // TODO ELIMINATE
 	 *
      * @return bool
 	 */
-    public function isLoggedIn() : bool {
-        if (isset($_SESSION["user"])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+   // public function isLoggedIn() : bool {
+      //  if (isset($_SESSION[self::$sessionUser])) {
+     //       return true;
+      //  } else {
+        //    return false;
+      //  }
+    //}
 
 
     /**
-	 * Checks if there is a cookie saved with credentials
+	 * Checks if there is a cookie saved with credentials TODO: ELIMINATE
 	 *
      * @return bool
 	 */
-    public function isRemembered(string $cookieName) : bool {
+    //public function isRemembered(string $cookieName) : bool {
         //Future: COMPARE CREDENTIALS!
-        if (isset($_COOKIE[$cookieName])) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+      //  if (isset($_COOKIE[$cookieName])) {
+     //       return true;
+        //}
+       // else {
+         //   return false;
+       // }
+   // }
 
     public function hashPassword(string $password) : string {
         return $this->userStorage->hashPassword($password);

@@ -15,7 +15,7 @@ require_once('model/SessionStorage.php');
 
 class App {
 
-    private static $register = 'register';
+    private static $register = 'register'; // route
     private $user;
     private $sessionStorage;
     private $userStorage;
@@ -48,7 +48,7 @@ class App {
     public function loadLayouts() {
         $dtv = new \View\DateTimeView();
         $layoutView = new \View\LayoutView();
-        $layoutView->render($this->user->isLoggedIn(), $this->formLayout, $dtv); 
+        $layoutView->render($this->sessionStorage->isLoggedIn(), $this->formLayout, $dtv); 
     }
 
 

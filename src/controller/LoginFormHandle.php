@@ -11,7 +11,6 @@ class LoginFormHandle {
 	private static $cookieName = 'LoginView::CookieName';
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
-    private static $messageId = 'LoginView::Message';
     private $user;
     private $session;
     
@@ -28,35 +27,38 @@ class LoginFormHandle {
 	 * Checks if form is submitted and if user is logged in, then generates a message
      * @return void, BUT writes to cookies and session!
 	 */
-    public function setLogin() { // TODO THIS FUNCTION IS DOING TOO MUCH!
-
-        if ($this->isRemembered()) { // is cookie with credentials stored previosly?
+    public function setLogin() {
+        if ($this->session->isRemembered(self::$cookieName)) { 
             $this->useRemembered();
         }
-        if (isset($_POST[self::$logout])) { // LOG OUT
-            if ($this->user->isLoggedIn()) {
+        if (isset($_POST[self::$logout])) { // log out 
+            if ($this->session->isLoggedIn()) {
                 $this->doLogout();
             } 
         }
-        if (isset($_POST[self::$login]) && !$this->user->isLoggedIn()) { // LOGIN FORM SUBMITTED
-            if (strlen($_POST[self::$name]) < 1) { // NO USERNAME
-                $message = "Username is missing";
-            } 
-            else if (strlen($_POST[self::$password]) < 1) { // NO PASSWORD
-                $message = "Password is missing";
-            } 
-            else if ($this->user->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // LOG IN
-                $this->doLogin();
-            } 
-            else if ($this->user->isUser($_POST[self::$name])) { // WRONG PASSWORD BUT USER EXSIST
-                $message = "Wrong name or password";
-            } 
-            else  { // WRONG PASSWORD OR USERNAME
-                $message = "Wrong name or password";
-            } 
-            $this->setMessageCookie($message);
+        if (isset($_POST[self::$login]) && !$this->session->isLoggedIn()) { // try to log in
+            $this->handleFormInput();
         } 
-        
+    }
+
+    /**
+	 *  Handles input from form 
+	 *
+     * @return void
+	 */
+    private function handleFormInput() {
+        if (strlen($_POST[self::$name]) < 1) { // no username
+            $message = "Username is missing";
+        } else if (strlen($_POST[self::$password]) < 1) { // no password
+            $message = "Password is missing";
+        } else if ($this->user->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
+            $this->doLogin();
+        } else if ($this->user->isUser($_POST[self::$name])) { // wrong password but user exsist
+            $message = "Wrong name or password";
+        } else  { // Wrong password or username
+            $message = "Wrong name or password";
+        } 
+        $this->setMessageCookie($message);
     }
 
 
@@ -115,10 +117,6 @@ class LoginFormHandle {
         $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
         header("Location: http://$host$uri/$file");
         exit();
-    }
-    
-    private function isRemembered() : bool {
-        return $this->user->isRemembered(self::$cookieName);
     }
     
     private function setMessageCookie(string $message) {

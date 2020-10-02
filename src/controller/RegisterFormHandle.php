@@ -4,7 +4,6 @@ namespace Controller;
 
 class RegisterFormHandle {
 
-    private static $messageId = 'RegisterView::Message';
     private static $name = 'RegisterView::UserName';
     private static $password = 'RegisterView::Password';
     private static $passwordR = 'RegisterView::PasswordRepeat';

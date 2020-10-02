@@ -4,6 +4,10 @@ namespace Model;
 
 class SessionStorage {
 
+    private static $cookieDuration = 60 * 60 * 24 * 30; // 30 days  
+    private static $sessionMessage = "message";
+    private static $sessionUser = "user";
+
     /**
     * Sets username and password cookie
     *
@@ -14,10 +18,10 @@ class SessionStorage {
 	* @return void, but sets cookies
 	*/
     public function setLoginCookie(string $CookieNameUser, string $CookieValueUser, string $CookieNamePassword, string $CookieValuePassword ) {
-        $cookieDuration = 60 * 60 * 24 * 30; // 30 days  
-        setcookie($CookieNameUser , $CookieValueUser, time() + $cookieDuration);  
-        setcookie($CookieNamePassword , $CookieValuePassword, time() + $cookieDuration);
+        setcookie($CookieNameUser , $CookieValueUser, time() + self::$cookieDuration);  
+        setcookie($CookieNamePassword , $CookieValuePassword, time() + self::$cookieDuration);
     }
+    // TODO: TOO MANY ARGUMENTS
 
     /**
     * Unsets user cookies for log in
@@ -40,8 +44,8 @@ class SessionStorage {
 	*/
     public function getMessageCookie() : string{
         $message = "";
-        if (isset($_SESSION["message"])) {
-            $message = $_SESSION["message"];
+        if (isset($_SESSION[self::$sessionMessage])) {
+            $message = $_SESSION[self::$sessionMessage];
         }
         return $message;
     }
@@ -52,8 +56,8 @@ class SessionStorage {
 	* @return void, but changes session 
 	*/
     public function unsetMessageCookie() {
-        if (isset($_SESSION["message"])) {
-            unset($_SESSION["message"]);
+        if (isset($_SESSION[self::$sessionMessage])) {
+            unset($_SESSION[self::$sessionMessage]);
         }
     }
 
@@ -63,7 +67,35 @@ class SessionStorage {
 	* @return bool
 	*/
     public function issetMessageCookie() : bool {
-        if (isset($_SESSION["message"])) {
+        if (isset($_SESSION[self::$sessionMessage])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+	 * Checks if there is a cookie saved with credentials
+	 *
+     * @return bool
+	 */
+    public function isRemembered(string $cookieName) : bool {
+        //Future: COMPARE CREDENTIALS!
+        if (isset($_COOKIE[$cookieName])) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+     
+    /**
+	 * Checks if user is logged in
+	 *
+     * @return bool
+	 */
+    public function isLoggedIn() : bool {
+        if (isset($_SESSION[self::$sessionUser])) {
             return true;
         } else {
             return false;
@@ -76,7 +108,7 @@ class SessionStorage {
 	* @return void, but changes session 
 	*/
     public function setMessageCookie(string $message) {
-        $_SESSION["message"] = $message;
+        $_SESSION[self::$sessionMessage] = $message;
     }
 
     /**
@@ -85,7 +117,7 @@ class SessionStorage {
 	* @return void, but changes session 
 	*/
     public function setUserSession(string $name) {
-        $_SESSION["user"] = $name;
+        $_SESSION[self::$sessionUser] = $name;
     }
 
     /**
@@ -94,8 +126,8 @@ class SessionStorage {
 	*/
     public function destroyUserSession()
     {
-      unset($_SESSION["user"]);
-      $_SESSION["user"] = null;
+      unset($_SESSION[self::$sessionUser]);
+      $_SESSION[self::$sessionUser] = null;
   
     }
 
