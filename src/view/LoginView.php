@@ -11,12 +11,12 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-	private $user;
+	private $userStorage;
 	private $message;
 	private $nameWasTooShort = false;
 
-	public function __construct(\Model\User $user, string $message) {
-		$this->user = $user;
+	public function __construct(\Model\UserStorage $userStorage, string $message) {
+		$this->userStorage = $userStorage;
 		$this->message = $message;
 	  }
 
@@ -90,7 +90,7 @@ class LoginView {
 
 		$usernameField = "";
 		if (isset($_POST[self::$name])) {
-			$usernameField = $this->user->filterInput($_POST[self::$name]);
+			$usernameField = $this->userStorage->filterInput($_POST[self::$name]);
 		}
 		return $usernameField;
 	}

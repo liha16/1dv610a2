@@ -25,7 +25,7 @@ class App {
     // Init model classes needed
     $this->sessionStorage = new \Model\SessionStorage();
     $this->userStorage = new \Model\UserStorage();
-    $this->user = new \Model\User($this->userStorage);
+    //$this->user = new \Model\User($this->userStorage);
     }
 
     public function run() {
@@ -37,11 +37,11 @@ class App {
     public function route() {
         // Route
         if (isset($_GET[self::$register])) {
-            new \Controller\RegisterFormHandle($this->user, $this->sessionStorage); // get and manage data from form
-            $this->formLayout = new \View\RegisterView($this->user, $this->sessionStorage->getMessageCookie()); // generate form output
+            new \Controller\RegisterFormHandle($this->userStorage, $this->sessionStorage); // get and manage data from form
+            $this->formLayout = new \View\RegisterView($this->userStorage, $this->sessionStorage->getMessageCookie()); // generate form output
         } else { // default page
-            new \Controller\LoginFormHandle($this->user, $this->sessionStorage);// get and manage data from form
-            $this->formLayout = new \View\LoginView($this->user, $this->sessionStorage->getMessageCookie()); // generate form output
+            new \Controller\LoginFormHandle($this->userStorage, $this->sessionStorage);// get and manage data from form
+            $this->formLayout = new \View\LoginView($this->userStorage, $this->sessionStorage->getMessageCookie()); // generate form output
         }
     }
 

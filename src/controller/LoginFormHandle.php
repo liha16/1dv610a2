@@ -11,12 +11,12 @@ class LoginFormHandle {
 	private static $cookieName = 'LoginView::CookieName';
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
-    private $user;
+    private $userStorage;
     private $session;
     
 
-    public function __construct(\Model\User $user, \Model\SessionStorage $session) {
-        $this->user = $user;
+    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session) {
+        $this->userStorage = $userStorage;
         $this->session = $session;
         $this->setLogin();
     }
@@ -51,9 +51,9 @@ class LoginFormHandle {
             $message = "Username is missing";
         } else if (strlen($_POST[self::$password]) < 1) { // no password
             $message = "Password is missing";
-        } else if ($this->user->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
+        } else if ($this->userStorage->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
             $this->doLogin();
-        } else if ($this->user->isUser($_POST[self::$name])) { // wrong password but user exsist
+        } else if ($this->userStorage->isUser($_POST[self::$name])) { // wrong password but user exsist
             $message = "Wrong name or password";
         } else  { // Wrong password or username
             $message = "Wrong name or password";
@@ -124,7 +124,7 @@ class LoginFormHandle {
     }
 
     private function setLoginCookie() {
-        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $this->user->hashPassword($_POST[self::$password]));
+        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $this->userStorage->hashPassword($_POST[self::$password]));
       }
 
     private function unsetLoginCookie() {

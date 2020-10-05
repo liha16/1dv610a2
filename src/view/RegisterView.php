@@ -9,11 +9,11 @@ namespace View;
         private static $passwordR = 'RegisterView::PasswordRepeat';
         private static $register = 'RegisterView::Register';
         private $message;
-        private $user;
+        private $userStorage;
 
 
-        public function __construct(\Model\User $user, string $message) {
-            $this->user = $user;
+        public function __construct(\Model\UserStorage $userStorage, string $message) {
+            $this->userStorage = $userStorage;
             $this->message = $message;
         }
         /**
@@ -63,7 +63,7 @@ namespace View;
             $usernameField = "";
 
             if (isset($_POST[self::$name])) {
-               $usernameField = $this->user->filterInput($_POST[self::$name]);
+               $usernameField = $this->userStorage->filterInput($_POST[self::$name]);
             }
             return $usernameField;
         }

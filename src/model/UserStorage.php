@@ -7,7 +7,6 @@ class UserStorage {
   private static $storageFile = "model/users.json";
   private $users = array();
 
-
   /**
 	 * Constructor opens data storage
 	 *
@@ -32,6 +31,15 @@ class UserStorage {
     }
     return $result;
   }
+
+   /**
+	 * Converts to HTML entieties and erases blank spaces
+	 *
+   * @return bool
+	 */
+  public function filterInput(string $input) : string {
+    return trim(htmlentities($input));	
+}
 
   public function addUser()
   {
