@@ -63,7 +63,8 @@ namespace View;
             $usernameField = "";
 
             if (isset($_POST[self::$name])) {
-               $usernameField = $this->userStorage->filterInput($_POST[self::$name]);
+               $usernameField = strip_tags($_POST[self::$name]);
+               $usernameField = $this->userStorage->filterInput($usernameField);
             }
             return $usernameField;
         }

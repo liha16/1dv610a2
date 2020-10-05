@@ -35,6 +35,7 @@ class App {
     public function route() {
         // Route
         if (isset($_GET[self::$register])) {
+            $this->sessionStorage->destroyUserSession(); // logs out if user wants to register
             new \Controller\RegisterFormHandle($this->userStorage, $this->sessionStorage); // get and manage data from form
             $this->formLayout = new \View\RegisterView($this->userStorage, $this->sessionStorage->getMessageCookie()); // generate form output
         } else { // default page

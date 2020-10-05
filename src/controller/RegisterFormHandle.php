@@ -47,14 +47,38 @@ class RegisterFormHandle {
             } 
             else if ($this->userStorage->isUser($_POST[self::$name])) { // User exsist
                 $message = "User exists, pick another username.";
+            }
+            else if ($this->hasNotValidChars($_POST[self::$name])) { // Invalid characters
+                $message = "Username contains invalid characters.";
             } else { // Register
                 $this->registerUser();
                 $message = "Registered new user.";
+                $this->setMessageCookie($message);
+                $this->headerLocation("index.php");
             }
             $this->setMessageCookie($message);
         } 
     }
 
+    /**
+	 * Checks if string has invalid characters
+     * 
+     * * @return bool, true if not valid
+	 */
+    function hasNotValidChars($string) {
+        return preg_match('/[^A-Za-z0-9.#\\-$]/', $string);
+    }
+
+    /**
+	 * Redirects to a valid path on server
+	 *
+	 */
+    private function headerLocation(string $file) {
+        $host  = $_SERVER['HTTP_HOST'];
+        $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        header("Location: http://$host$uri/$file");
+        exit();
+    }
 
     /**
 	 * Creates new user object and sends to save to Storage

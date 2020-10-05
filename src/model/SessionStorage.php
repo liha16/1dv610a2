@@ -77,7 +77,7 @@ class SessionStorage {
     /**
 	 * Checks if there is a cookie saved with credentials
 	 *
-     * @return bool
+     * @return bool 
 	 */
     public function isRemembered(string $cookieName) : bool {
         //Future: COMPARE CREDENTIALS!
