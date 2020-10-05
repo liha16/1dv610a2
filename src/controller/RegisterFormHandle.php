@@ -2,6 +2,9 @@
 
 namespace Controller;
 
+require_once('model/User.php');
+
+
 class RegisterFormHandle {
 
     private static $name = 'RegisterView::UserName';
@@ -45,10 +48,24 @@ class RegisterFormHandle {
             else if ($this->userStorage->isUser($_POST[self::$name])) { // User exsist
                 $message = "User exists, pick another username.";
             } else { // Register
-              //s  $newUser ;
+                $this->registerUser();
+                $message = "Registered new user.";
             }
             $this->setMessageCookie($message);
         } 
+    }
+
+
+    /**
+	 * Creates new user object and sends to save to Storage
+	 *
+     * @return bool, true if short
+	 */
+    private function registerUser() {
+        $newUser = new \Model\User;
+        $newUser->setName($_POST[self::$name]);
+        $newUser->setPassword($_POST[self::$password]);
+        $this->userStorage->saveNewUser($newUser); // TODO exceptionn
     }
 
     /**

@@ -10,13 +10,11 @@ require_once('view/RegisterView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('model/UserStorage.php');
-require_once('model/User.php');
 require_once('model/SessionStorage.php');
 
 class App {
 
     private static $register = 'register'; // route
-    private $user;
     private $sessionStorage;
     private $userStorage;
     private $formLayout;

@@ -4,6 +4,30 @@ namespace Model;
 
 class User {
 
+    private $username;
+    private $password;
+
+    // public function __construct(string $name, string $password) {
+    //     $this->name = $name;
+    //     $this->password = $password;
+    // }
+
+    public function setName($username) {
+        $this->username = $this->filterInput($username);
+    }
+
+    public function setPassword($password) {
+        $this->password = $this->filterInput($password);
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getPassword() {
+        return $this->password;
+    }
+
     // private $userStorage;
 
 	// public function __construct(UserStorage $userStorage) {
@@ -18,14 +42,14 @@ class User {
     //     return $this->userStorage->authenticateUser($userName, $password);
     // }
 
-    // /**
-	//  * Converts to HTML entieties and erases blank spaces
-	//  *
-    //  * @return bool
-	//  */
-    // public function filterInput(string $input) : string {
-    //     return trim(htmlentities($input));	
-    // }
+    /**
+	* Converts to HTML entieties and erases blank spaces
+	*
+    * @return bool
+	*/
+    public function filterInput(string $input) : string {
+        return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));
+    }
 
     /**
 	 * Checks if user is logged in // TODO ELIMINATE

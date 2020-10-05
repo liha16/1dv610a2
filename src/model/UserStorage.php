@@ -32,14 +32,36 @@ class UserStorage {
     return $result;
   }
 
+  /**
+	 *  
+	 * Gets data from user and saves in storage
+   * @return 
+	 */
+  public function saveNewUser(\Model\User $user) {
+    $newMember = (object)array(); // new public user 
+    $newMember->username = $user->getUsername(); // TODO : Make method that checks rules for name
+    $newMember->password = $this->hashPassword($user->getPassword()); // TODO : Make method that checks rules for personal NR
+    $this->saveMemberToFile($newMember);
+  }
+
+  /**
+  * Saves user as last position in db file
+  */
+  public function saveMemberToFile($user) {
+    $this->users[count($this->users)] = $user;
+    $usersJSON = json_encode($this->users);
+    file_put_contents(self::$storageFile, $usersJSON);
+}
+
+
    /**
 	 * Converts to HTML entieties and erases blank spaces
 	 *
    * @return bool
 	 */
   public function filterInput(string $input) : string {
-    return trim(htmlentities($input));	
-}
+    return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));	
+  }
 
   public function addUser()
   {
