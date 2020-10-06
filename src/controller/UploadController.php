@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-require_once('model/User.php');
+require_once('model/ImageList.php');
 
 
 class UploadController {
@@ -10,77 +10,52 @@ class UploadController {
     private static $upload = 'UploadView::Upload';
     private $file = 'UploadView::FileToUpload';
     private $target_dir = "uploads/";
-    private $userStorage;
     private $session;
     private $maxSize = 500000;
+    private $allowedFileTypes = ["jpg", "png", "jpeg", "gif"];
 	
-    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session) {
-        $this->userStorage = $userStorage;// TODO NEEDED?
-        $this->session = $session; // TODO NEEDED?
+    public function __construct(\Model\SessionStorage $session) {
+        $this->session = $session;
         $this->handleUpload();
+        
     }
 
     /**
 	 * Sets session messages for register form 
+     * 
+     * Code inspired from https://www.w3schools.com/php/php_file_upload.asp
 	 *
      * @return void, BUT writes to cookies and session!
 	 */
-    private function handleUpload() { // TODO THIS FUNCTION IS DOING TOO MUCH! IN MODEL?
-
-        // Code inspired from https://www.w3schools.com/php/php_file_upload.asp
+    private function handleUpload() {
 
         if (isset($_POST[self::$upload])) {
-
-            if ( ! empty($_FILES)) {
+            if (empty($_FILES[$this->file]["tmp_name"])) { // No image selected
                 $message = "You must select an image to upload.";
             } else {
-                # code...
-            }    
+                $targetFileName = basename($_FILES[$this->file]["name"]);
+                $targetFile = $this->target_dir . $targetFileName;
+                $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
-            $target_file = $this->target_dir . basename($_FILES[$this->file]["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-            $message = "";
-            
-            
-            $check = getimagesize($_FILES[$this->file]["tmp_name"]);
-            if($check == false) {
-                $message =  "File is not an image.";
-                $uploadOk = 0;
-            }
-
-            // Check if file already exists
-            if (file_exists($target_file)) {
-                $message = "A file with that name already exists"; 
-                $uploadOk = 0;
-            }
-
-            // Check file size
-            if ($_FILES["$this->file"]["size"] > $this->maxSize) {
-                $message = "The image is too large, max allowed " . $this->maxSize;
-                $uploadOk = 0;
-            }
-
-            // Allow certain file formats
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" ) {
-            $message = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $uploadOk = 0;
-            }
-
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 1) {
-                if (move_uploaded_file($_FILES[$this->file]["tmp_name"], $target_file)) {
-                    $message = "The file ". $this->getImageLink(htmlspecialchars(basename($_FILES[$this->file]["name"]))) . " has been uploaded."; // TODO too long
+                if (!getimagesize($_FILES[$this->file]["tmp_name"])) { // Is it an image
+                    $message =  "File is not an image.";
+                } else if (file_exists($targetFile)) { // Check if file already exists
+                    $message = "A file with that name already exists"; 
+                } else if ($_FILES["$this->file"]["size"] > $this->maxSize) { // Check file size
+                    $message = "The image is too large, max allowed " . $this->maxSize;
+                } else if (!in_array($imageFileType, $this->allowedFileTypes)) { // Allow certain file formats
+                    $message = "Filetype " . $imageFileType . " is not allowed.";
                 } else {
-                // $message = "Sorry, there was an error uploading your file.";
-                }
+                    if (move_uploaded_file($_FILES[$this->file]["tmp_name"], $targetFile)) { // Try to upload
+                        $message = "The file ". $this->getImageLink(htmlspecialchars($targetFileName)) . " has been uploaded.";
+                    } else {
+                        $message = "Sorry, there was an error uploading your file.";
+                    }
+                } 
             } 
             $this->setMessage($message);
         }
     }
-
-
     /**
 	 * Get url
 	 *
@@ -90,6 +65,7 @@ class UploadController {
         $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
         return "<a href='http://$host$uri/$this->target_dir/$file'>$file</a>";
     }
+    
     /**
 	 * Redirects to a valid path on server
 	 *

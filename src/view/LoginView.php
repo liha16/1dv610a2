@@ -13,15 +13,11 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private $userStorage;
 	private $message;
-	private $uploadImageView;
 
-	public function __construct(\Model\UserStorage $userStorage, 
-								string $message, 
-								\View\UploadImageView $uploadImageView) 
+	public function __construct(\Model\UserStorage $userStorage, string $message) 
 	  {
 		$this->userStorage = $userStorage;
 		$this->message = $message;
-		$this->uploadImageView = $uploadImageView;
 	  }
 
 
@@ -54,7 +50,8 @@ class LoginView {
 				<p id="' . self::$messageId . '">' . $message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form><br>
-		' . $this->uploadImageView->generateUploadFormHTML();
+		';
+		//' . $this->uploadImageView->response();
 	}
 	
 	/**
