@@ -7,17 +7,21 @@ class LoginView {
 	private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';
 	private static $password = 'LoginView::Password';
-	private static $cookieName = 'LoginView::CookieName';
-	private static $cookiePassword = 'LoginView::CookiePassword';
+//	private static $cookieName = 'LoginView::CookieName'; // For future implementation
+//	private static $cookiePassword = 'LoginView::CookiePassword'; // For future implementation
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $userStorage;
 	private $message;
-	private $nameWasTooShort = false;
+	private $uploadImageView;
 
-	public function __construct(\Model\UserStorage $userStorage, string $message) {
+	public function __construct(\Model\UserStorage $userStorage, 
+								string $message, 
+								\View\UploadImageView $uploadImageView) 
+	  {
 		$this->userStorage = $userStorage;
 		$this->message = $message;
+		$this->uploadImageView = $uploadImageView;
 	  }
 
 
@@ -28,10 +32,10 @@ class LoginView {
 	 *
 	 * @return  string HTML Form or button
 	 */
-	public function response(bool $isLoggedIn) : string {
+	public function response(bool $isLoggedIn) {
 
 		if ($isLoggedIn) {
-			$response = $this->generateLogoutButtonHTML($this->message);
+			$response = $this->generateLoggedInHTML($this->message);
 		}
 		else {
 			$response = $this->generateLoginFormHTML($this->message);
@@ -44,13 +48,13 @@ class LoginView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	private function generateLogoutButtonHTML(string $message) : string{
+	private function generateLoggedInHTML(string $message) : string{
 		return '
-			<form  method="post" >
+			<form method="post" action="?" >
 				<p id="' . self::$messageId . '">' . $message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
-			</form>
-		';
+			</form><br>
+		' . $this->uploadImageView->generateUploadFormHTML();
 	}
 	
 	/**
@@ -60,7 +64,7 @@ class LoginView {
 	*/
 	private function generateLoginFormHTML(string $message) : string {
 		return '
-			<form method="post" > 
+			<form method="post" action="?" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
 					<p id="' . self::$messageId . '">' . $message . '</p>

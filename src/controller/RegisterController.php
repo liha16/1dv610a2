@@ -5,7 +5,7 @@ namespace Controller;
 require_once('model/User.php');
 
 
-class RegisterFormHandle {
+class RegisterController {
 
     private static $name = 'RegisterView::UserName';
     private static $password = 'RegisterView::Password';
@@ -30,11 +30,12 @@ class RegisterFormHandle {
 	 *
      * @return void, BUT writes to cookies and session!
 	 */
-    public function setRegister() { // TODO THIS FUNCTION IS DOING TOO MUCH!
+    private function setRegister() { // TODO THIS FUNCTION IS DOING TOO MUCH!
         $message = "";
         if (isset($_POST[self::$register])) {
             if ($this->inputHasInvalidLength()) { // TOO SHORT FIELDS
-                $message = "Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters.";
+                $message = "Username has too few characters, at least 3 characters. 
+                Password has too few characters, at least 6 characters.";
             } 
             else if (strlen($_POST[self::$name]) < self::$userNameMin) { // TOO SHORT NAME FIELD
                 $message = "Username has too few characters, at least 3 characters.";
@@ -51,12 +52,9 @@ class RegisterFormHandle {
             else if ($this->hasNotValidChars($_POST[self::$name])) { // Invalid characters
                 $message = "Username contains invalid characters.";
             } else { // Register
-                $this->registerUser();
-                $message = "Registered new user.";
-                $this->setMessageCookie($message);
-                $this->headerLocation("index.php");
+                $this->registerUser(); 
             }
-            $this->setMessageCookie($message);
+            $this->setMessage($message);
         } 
     }
 
@@ -65,7 +63,7 @@ class RegisterFormHandle {
      * 
      * * @return bool, true if not valid
 	 */
-    function hasNotValidChars($string) {
+    private function hasNotValidChars($string) {
         return preg_match('/[^A-Za-z0-9.#\\-$]/', $string);
     }
 
@@ -81,15 +79,19 @@ class RegisterFormHandle {
     }
 
     /**
-	 * Creates new user object and sends to save to Storage
+	 * Creates new user object and saves to Storage
 	 *
-     * @return bool, true if short
+     * @return void, but saved so storage
 	 */
     private function registerUser() {
         $newUser = new \Model\User;
         $newUser->setName($_POST[self::$name]);
         $newUser->setPassword($_POST[self::$password]);
-        $this->userStorage->saveNewUser($newUser); // TODO exceptionn
+        $this->userStorage->saveNewUser($newUser); // TODO exceptionn!!s
+        $message = "Registered new user.";
+        $this->session->destroyUserSession(); // logs out if user wants to register
+        $this->setMessage($message);
+        $this->headerLocation("index.php");
     }
 
     /**
@@ -102,8 +104,8 @@ class RegisterFormHandle {
     }
 
     
-    private function setMessageCookie(string $message) {
-        $this->session->setMessageCookie($message);		
+    private function setMessage(string $message) {
+        $this->session->setMessage($message);		
     }
 
 }

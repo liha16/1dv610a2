@@ -21,7 +21,7 @@ namespace View;
          *
          * @return  string HTML Form or button
          */
-        public function response(bool $isLoggedIn) : string {
+        public function response(bool $isLoggedIn) {
             return $this->generateRegisterFormHTML($this->message);
         }
 
@@ -31,7 +31,7 @@ namespace View;
         * @param $message, String output message
         * @return void, BUT writes to standard output!
         */
-        private function generateRegisterFormHTML(string $message) : string {
+        private function generateRegisterFormHTML(string $message) {
             return '
             <h2>Register new user</h2>
             <form method="post" action="?register" enctype="multipart/form-data"> 

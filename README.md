@@ -1,4 +1,4 @@
-# 1dv610a2
+# 1dv610 a2 + a3
 Assignment 2 in course 1dv610
 Learn about the assignment on  [CoursePress](https://coursepress.lnu.se/kurs/introduktion-till-mjukvarukvalitet/02-Laborationsuppgifter/3.%20Requirements).
 

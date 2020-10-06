@@ -3,8 +3,10 @@
 namespace Controller;
 
 //INCLUDE THE FILES NEEDED...
-require_once('controller/LoginFormHandle.php');
-require_once('controller/RegisterFormHandle.php');
+require_once('controller/LoginController.php');
+require_once('controller/RegisterController.php');
+require_once('controller/UploadController.php');
+require_once('view/UploadImageView.php');
 require_once('view/LoginView.php');
 require_once('view/RegisterView.php');
 require_once('view/DateTimeView.php');
@@ -14,40 +16,45 @@ require_once('model/SessionStorage.php');
 
 class App {
 
-    private static $register = 'register'; // route
-    private $sessionStorage;
+    private static $register = 'register';
+    private static $uploadImage = 'upload';
+    private $session;
     private $userStorage;
     private $formLayout;
+    private $uploadImageView;
+     
 
 	public function __construct() {
     // Init model classes needed
-    $this->sessionStorage = new \Model\SessionStorage();
+    $this->session = new \Model\SessionStorage();
     $this->userStorage = new \Model\UserStorage();
-    //$this->user = new \Model\User($this->userStorage);
+    $this->uploadImageView = new \View\UploadImageView();
     }
 
     public function run() {
         $this->route();
         $this->loadLayouts();
-        $this->sessionStorage->unsetMessageCookie(); //Unsets all flash messages
+        $this->session->unsetMessage(); //Unsets all flash messages
     }
 
-    public function route() {
-        // Route
-        if (isset($_GET[self::$register])) {
-            $this->sessionStorage->destroyUserSession(); // logs out if user wants to register
-            new \Controller\RegisterFormHandle($this->userStorage, $this->sessionStorage); // get and manage data from form
-            $this->formLayout = new \View\RegisterView($this->userStorage, $this->sessionStorage->getMessageCookie()); // generate form output
+    private function route() {
+        // Route with paramenters
+        if (isset($_GET[self::$register])) { // TODO Make sepatare functions for each route
+            new \Controller\RegisterController($this->userStorage, $this->session); // register members
+            $this->formLayout = new \View\RegisterView($this->userStorage, $this->session->getMessage());
+        } elseif (isset($_GET[self::$uploadImage]) && $this->session->isLoggedIn()) { // upload image
+            new \Controller\UploadController($this->userStorage, $this->session);
+            $this->formLayout = new \View\LoginView($this->userStorage, $this->session->getMessage(), $this->uploadImageView);
         } else { // default page
-            new \Controller\LoginFormHandle($this->userStorage, $this->sessionStorage);// get and manage data from form
-            $this->formLayout = new \View\LoginView($this->userStorage, $this->sessionStorage->getMessageCookie()); // generate form output
+            new \Controller\LoginController($this->userStorage, $this->session);
+            $this->formLayout = new \View\LoginView($this->userStorage, $this->session->getMessage(), $this->uploadImageView);
         }
     }
 
-    public function loadLayouts() {
+    private function loadLayouts() {
         $dtv = new \View\DateTimeView();
         $layoutView = new \View\LayoutView();
-        $layoutView->render($this->sessionStorage->isLoggedIn(), $this->formLayout, $dtv); 
+        $layoutView->render($this->session->isLoggedIn(), $this->formLayout, $dtv); 
     }
 
 

@@ -22,10 +22,10 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function isUser(string $username) : bool {
+  public function isUser(string $username) {
     $result = false;
     foreach ($this->users as $user => $value) {      
-      if ($username == $value["username"]) {
+      if ($username == $value["username"]) { // TODO Strängberoende
         $result = true;
       }
     }
@@ -59,7 +59,7 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function filterInput(string $input) : string {
+  public function filterInput(string $input) {
     return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));	
   }
 
@@ -78,10 +78,10 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function authenticateUser(string $userName, string $password) : bool // MOVE TO AUTHENITACE.php??
+  public function authenticateUser(string $userName, string $password) // MOVE TO AUTHENITACE.php??
   {
     $result = false;
-    foreach ($this->users as $user => $value) {      
+    foreach ($this->users as $user => $value) {      // TODO strängberoenden
       if ($userName == $value["username"] && $this->verifyHashedPassword($value["password"], $password)) {
         $result = true;
       }
@@ -94,7 +94,7 @@ class UserStorage {
 	 *
    * @return bool
 	 */
-  public function verifyHashedPassword(string $hash, string $password) : bool {
+  public function verifyHashedPassword(string $hash, string $password) {
     if (password_verify($password, $hash)) {
         return true;
     } else {
@@ -107,7 +107,7 @@ class UserStorage {
 	 *
    * @return string
 	 */
-  public function hashPassword($password) : string {
+  public function hashPassword($password) {
       return password_hash($password, PASSWORD_DEFAULT);
   }
 

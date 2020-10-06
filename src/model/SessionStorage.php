@@ -17,7 +17,10 @@ class SessionStorage {
     * @param $CookieValuePassword, value of $CookieValuePassword
 	* @return void, but sets cookies
 	*/
-    public function setLoginCookie(string $CookieNameUser, string $CookieValueUser, string $CookieNamePassword, string $CookieValuePassword ) {
+    public function setLoginCookie(string $CookieNameUser, 
+                                    string $CookieValueUser, 
+                                    string $CookieNamePassword, 
+                                    string $CookieValuePassword ) {
         setcookie($CookieNameUser , $CookieValueUser, time() + self::$cookieDuration);  
         setcookie($CookieNamePassword , $CookieValuePassword, time() + self::$cookieDuration);
     }
@@ -42,7 +45,7 @@ class SessionStorage {
     *
 	* @return string, message saved in session
 	*/
-    public function getMessageCookie() : string{
+    public function getMessage() {
         $message = "";
         if (isset($_SESSION[self::$sessionMessage])) {
             $message = $_SESSION[self::$sessionMessage];
@@ -55,7 +58,7 @@ class SessionStorage {
     *
 	* @return void, but changes session 
 	*/
-    public function unsetMessageCookie() {
+    public function unsetMessage() {
         if (isset($_SESSION[self::$sessionMessage])) {
             unset($_SESSION[self::$sessionMessage]);
         }
@@ -66,7 +69,7 @@ class SessionStorage {
     *
 	* @return bool
 	*/
-    public function issetMessageCookie() : bool {
+    public function issetMessage() {
         if (isset($_SESSION[self::$sessionMessage])) {
             return true;
         } else {
@@ -79,7 +82,7 @@ class SessionStorage {
 	 *
      * @return bool 
 	 */
-    public function isRemembered(string $cookieName) : bool {
+    public function isRemembered(string $cookieName) {
         //Future: COMPARE CREDENTIALS!
         if (isset($_COOKIE[$cookieName])) {
             return true;
@@ -94,7 +97,7 @@ class SessionStorage {
 	 *
      * @return bool
 	 */
-    public function isLoggedIn() : bool {
+    public function isLoggedIn() {
         if (isset($_SESSION[self::$sessionUser])) {
             return true;
         } else {
@@ -107,7 +110,7 @@ class SessionStorage {
     * @param $message, message to save
 	* @return void, but changes session 
 	*/
-    public function setMessageCookie(string $message) {
+    public function setMessage(string $message) {
         $_SESSION[self::$sessionMessage] = $message;
     }
 
