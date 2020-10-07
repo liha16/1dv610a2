@@ -7,15 +7,15 @@ require_once('model/ImageList.php');
 
 class UploadController {
 
-    private static $upload = 'UploadView::Upload';
-    private $file = 'UploadView::FileToUpload';
     private $target_dir = "uploads/";
     private $session;
     private $maxSize = 500000;
     private $allowedFileTypes = ["jpg", "png", "jpeg", "gif"];
+    private $UploadImageView;
 	
-    public function __construct(\Model\SessionStorage $session) {
+    public function __construct(\Model\SessionStorage $session, \View\UploadImageView $UploadImageView) {
         $this->session = $session;
+        $this->UploadImageView = $UploadImageView;
         $this->handleUpload();
         
     }
@@ -29,24 +29,27 @@ class UploadController {
 	 */
     private function handleUpload() {
 
-        if (isset($_POST[self::$upload])) {
-            if (empty($_FILES[$this->file]["tmp_name"])) { // No image selected
+        if ($this->UploadImageView->isUploadFormPosted()) {
+
+            $fileToUpload = $this->UploadImageView->getFileToUpload();
+
+            if (empty($fileToUpload["tmp_name"])) { // No image selected
                 $message = "You must select an image to upload.";
             } else {
-                $targetFileName = basename($_FILES[$this->file]["name"]);
+                $targetFileName = basename($fileToUpload["name"]);
                 $targetFile = $this->target_dir . $targetFileName;
                 $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
-                if (!getimagesize($_FILES[$this->file]["tmp_name"])) { // Is it an image
+                if (!getimagesize($fileToUpload["tmp_name"])) { // Is it an image
                     $message =  "File is not an image.";
                 } else if (file_exists($targetFile)) { // Check if file already exists
                     $message = "A file with that name already exists"; 
-                } else if ($_FILES["$this->file"]["size"] > $this->maxSize) { // Check file size
+                } else if ($fileToUpload["size"] > $this->maxSize) { // Check file size
                     $message = "The image is too large, max allowed " . $this->maxSize;
                 } else if (!in_array($imageFileType, $this->allowedFileTypes)) { // Allow certain file formats
                     $message = "Filetype " . $imageFileType . " is not allowed.";
                 } else {
-                    if (move_uploaded_file($_FILES[$this->file]["tmp_name"], $targetFile)) { // Try to upload
+                    if (move_uploaded_file($fileToUpload["tmp_name"], $targetFile)) { // Try to upload
                         $message = "The file ". $this->getImageLink(htmlspecialchars($targetFileName)) . " has been uploaded.";
                     } else {
                         $message = "Sorry, there was an error uploading your file.";

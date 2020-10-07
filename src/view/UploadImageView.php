@@ -8,10 +8,15 @@ class UploadImageView {
 	private static $upload = 'UploadView::Upload';
 	private $message;
 
-	public function __construct(string $message) {
-		$this->message = $message;
-	  }
+	// public function __construct(string $message) {
+	// 	$this->message = $message;
+	//   }
 
+	public function setMessage(string $message) {
+		$this->message = $message;	  
+	}
+
+	  
 
 	/**
 	* Generate HTML code on the output buffer for the upload form
@@ -33,6 +38,14 @@ class UploadImageView {
 				</fieldset>
 			</form>
 		';
+	}
+
+	public function isUploadFormPosted() : bool {
+		return isset($_POST[self::$upload]);
+	}
+
+	public function getFileToUpload() : array {
+		return $_FILES[self::$file];
 	}
 
 	

@@ -4,6 +4,8 @@ namespace Model;
 
 class SessionStorage {
 
+    // TODO: make only login session here
+
     private static $cookieDuration = 60 * 60 * 24 * 30; // 30 days  
     private static $sessionMessage = "message";
     private static $sessionUser = "user";
