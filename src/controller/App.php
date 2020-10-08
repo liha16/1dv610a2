@@ -32,7 +32,7 @@ class App {
     $this->routerView = new \View\RouterView();
     $this->viewImages = new \Model\ImageList();
     $this->UploadImageView = new \View\UploadImageView();
-    $this->UploadController = new \Controller\UploadController($this->session, $this->UploadImageView);
+    $this->UploadController = new \Controller\UploadController($this->session, $this->UploadImageView, $this->viewImages);
 
     }
 
@@ -49,19 +49,18 @@ class App {
         $this->formLayout = new \View\LoginView($this->userStorage, $this->session->getMessage());
 
 
-        if ($this->session->isLoggedIn()) { // LOGGED IN ONLY:
-
-            if ($this->routerView->doesUserWantsUploadImage() && $this->session->isLoggedIn()) { // upload image
+        if ($this->session->isLoggedIn()) { // LOGGED IN ONLY
+            if ($this->routerView->doesUserWantsUploadImage()) { // upload image
                 //new \Controller\UploadController($this->session);
                 $this->UploadImageView->setMessage($this->session->getMessage());
                 $this->formLayout = $this->UploadImageView;
             } 
-            if ($this->routerView->doesUserWantsToViewImages() && $this->session->isLoggedIn()) { // view images
+            if ($this->routerView->doesUserWantsToViewImages()) { // view images
                 $this->formLayout = new \View\ImageListView($this->viewImages->getImages());
             } 
         }
 
-        if ($this->routerView->doesUserWantsToRegister()) {
+        if ($this->routerView->doesUserWantsToRegister()) { // register new user
             new \Controller\RegisterController($this->userStorage, $this->session);
             $this->formLayout = new \View\RegisterView($this->userStorage, $this->session->getMessage());
         }

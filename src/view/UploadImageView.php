@@ -15,7 +15,6 @@ class UploadImageView {
 	public function setMessage(string $message) {
 		$this->message = $message;	  
 	}
-
 	  
 
 	/**
