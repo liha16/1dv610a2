@@ -21,7 +21,7 @@ class RegisterController {
     /**
 	 * Handles register form 
 	 *
-     * @return void, BUT writes to cookies and session!
+     * @return void
 	 */
     public function setRegister() {
         if ($this->registerView->isRegisterFormPosted()) {
@@ -48,7 +48,7 @@ class RegisterController {
     /**
 	 * Creates new user object and saves to Storage
 	 *
-     * @return void, but saved so storage
+     * @return void, but saves so storage
 	 */
     private function registerUser() {
         $newUser = new \Model\User;

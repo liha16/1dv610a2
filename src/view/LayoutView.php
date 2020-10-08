@@ -4,7 +4,7 @@ namespace View;
 
 class LayoutView {
   
-  public function render(bool $isLoggedIn, $v, \View\DateTimeView $dtv) {
+  public function render(bool $isLoggedIn, $v, \View\DateTimeView $dtv, \View\RouterView $router) {
     echo '<!DOCTYPE html>
       <htmllang="en">
         <head>
@@ -14,7 +14,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 3</h1>
-          ' . $this->renderRegisterLink() . '
+          ' . $router->getRegisterLink() . '
           ' . $this->renderIsLoggedIn($isLoggedIn) . '
           
           <div class="container">
@@ -27,7 +27,7 @@ class LayoutView {
     ';
   }
   
-  private function renderIsLoggedIn(bool $isLoggedIn) {
+  private function renderIsLoggedIn(bool $isLoggedIn) : string { // TODO Move this
     if ($isLoggedIn) {
       return '
       <a href="?upload">Upload image</a>
@@ -40,12 +40,4 @@ class LayoutView {
     }
   }
 
-  private function renderRegisterLink() : string {
-    if (isset($_GET['register'])) {
-      return '<a href="?">Back to login</a>';
-    }
-    else {
-      return '<a href="?register">Register a new user</a>';
-    }
-  }
 }

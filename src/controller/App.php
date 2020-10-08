@@ -31,30 +31,44 @@ class App {
      
 
 	public function __construct() {
+    
     $this->session = new \Model\SessionStorage();
     $this->userStorage = new \Model\UserStorage();
-    $this->routerView = new \View\RouterView();
     $this->viewImages = new \Model\ImageList();
+   // $this->messageStorage = new \View\MessageStorage();
+    $this->routerView = new \View\RouterView();
+    $this->dtv = new \View\DateTimeView();
     $this->imageListView = new \View\ImageListView($this->viewImages->getImages());;
     $this->uploadImageView = new \View\UploadImageView();
     $this->registerView = new \View\RegisterView($this->userStorage, $this->session);
-    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->viewImages);
     $this->loginView = new \View\LoginView($this->userStorage, $this->session);
+    $this->layoutView = new \View\LayoutView();
+    
+    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->viewImages);
     $this->loginController = new \Controller\LoginController($this->session, $this->loginView);
     $this->registerController = new \Controller\RegisterController($this->userStorage, $this->session, $this->registerView);    
 }
 
+    /**
+	 * Runs the app
+	 *
+     * @return void
+	 */
     public function run() {
         $this->route();
-        $this->loadLayouts();
+        $this->layoutView->render($this->session->isLoggedIn(), $this->formLayout, $this->dtv, $this->routerView); 
         $this->session->unsetMessage(); //Unsets all flash messages
     }
 
+    /**
+	 * Routes to controllers and sets views
+	 *
+     * @return void
+	 */
     private function route() {
-
         // Load default
         $this->loginController->setLogin();
-        $this->formLayout = new \View\LoginView($this->userStorage, $this->session);
+        $this->formLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
 
         if ($this->session->isLoggedIn()) { // LOGGED IN ONLY:
             if ($this->routerView->doesUserWantsUploadImage()) { // upload image
@@ -72,11 +86,6 @@ class App {
         }
     }
 
-    private function loadLayouts() {
-        $dtv = new \View\DateTimeView();
-        $layoutView = new \View\LayoutView();
-        $layoutView->render($this->session->isLoggedIn(), $this->formLayout, $dtv); 
-    }
 
 
 }

@@ -24,11 +24,11 @@ class User {
         $this->password = $this->filterInput($password);
     }
 
-    public function getUsername() {
+    public function getUsername() : string {
         return $this->username;
     }
 
-    public function getPassword() {
+    public function getPassword() : string {
         return $this->password;
     }
 

@@ -89,7 +89,6 @@ class LoginView {
     * @return string, input in form
     */
 	private function getRequestUserName() : string {
-
 		$usernameField = "";
 		if (isset($_POST[self::$name])) {
 			$usernameField = $this->userStorage->filterInput($_POST[self::$name]);
@@ -121,7 +120,6 @@ class LoginView {
 	}
 
 	public function doLogout() : string {
-
 		$this->session->destroyUserSession();
         $message = "Bye bye!";
         $this->session->setMessage($message);
@@ -162,7 +160,6 @@ class LoginView {
 	
 	/**
 	 * Redirects to a valid path on server
-	 *
 	 */
     private function headerLocation(string $file) {
         $host  = $_SERVER['HTTP_HOST'];

@@ -17,7 +17,7 @@ class ImageListView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	public function response() {
+	public function response() : string {
         $html = '<h2>List images</h2>';
         
         foreach ($this->images as $image) {

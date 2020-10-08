@@ -16,21 +16,17 @@ class UploadController {
         $this->UploadImageView = $UploadImageView;
         $this->imageListModel = $imageModel;
         $this->handleUpload();
-        
     }
 
     /**
 	 * Sets session messages for image upload
 	 *
-     * @return void, BUT writes to session!
+     * @return void
 	 */
     private function handleUpload() {
-
         if ($this->UploadImageView->isUploadFormPosted()) {
-
             $fileToUpload = $this->UploadImageView->getFileToUpload();
             $message = $this->imageListModel->uploadImage($fileToUpload);
-
             $this->session->setMessage($message);
         }
     }

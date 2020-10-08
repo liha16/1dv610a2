@@ -21,6 +21,15 @@ namespace View;
             return isset($_GET[self::$viewImages]);
         }
 
+        public function getRegisterLink() : string {
+            if (isset($_GET[self::$register])) {
+              return '<a href="?">Back to login</a>';
+            }
+            else {
+              return '<a href="?register">Register a new user</a>';
+            }
+          }
+
 
     }
 

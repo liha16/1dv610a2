@@ -15,10 +15,9 @@ class LoginController {
     }
 
     /**
-	 * Sets session message and route login/outs
+	 * Route login/outs
 	 *
-	 * Checks if form is submitted and if user is logged in, then generates a message
-     * @return void, BUT writes to cookies and session!
+     * @return void
 	 */
     public function setLogin() {
         if ($this->loginView->isRememberedCookie()) {
@@ -51,29 +50,5 @@ class LoginController {
         // Future: authenticate with cookies
     }
 
-    // /**
-	//  * Logs out user and unsets session
-    //  * Redirects to index.php
-	//  *
-    //  * @return void, BUT writes to cookies and session!
-	//  */
-    // private function doLogout() {
-    //     $this->session->destroyUserSession();
-    //     $message = "Bye bye!";
-    //     $this->session->setMessage($message);
-    //     $this->loginView->unsetLoginCookie();
-    //     $this->headerLocation("index.php");
-    // }
-    
-    // /**
-	//  * Redirects to a valid path on server
-	//  *
-	//  */
-    // private function headerLocation(string $file) {
-    //     $host  = $_SERVER['HTTP_HOST'];
-    //     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-    //     header("Location: http://$host$uri/$file");
-    //     exit();
-    // }
     
 }

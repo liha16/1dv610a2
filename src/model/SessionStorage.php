@@ -47,7 +47,7 @@ class SessionStorage {
     *
 	* @return string, message saved in session
 	*/
-    public function getMessage() {
+    public function getMessage() : string {
         $message = "";
         if (isset($_SESSION[self::$sessionMessage])) {
             $message = $_SESSION[self::$sessionMessage];
@@ -71,7 +71,7 @@ class SessionStorage {
     *
 	* @return bool
 	*/
-    public function issetMessage() {
+    public function issetMessage() : bool {
         if (isset($_SESSION[self::$sessionMessage])) {
             return true;
         } else {
@@ -84,7 +84,7 @@ class SessionStorage {
 	 *
      * @return bool 
 	 */
-    public function isRemembered(string $cookieName) {
+    public function isRemembered(string $cookieName) : bool {
         //Future: COMPARE CREDENTIALS!
         if (isset($_COOKIE[$cookieName])) {
             return true;
@@ -99,7 +99,7 @@ class SessionStorage {
 	 *
      * @return bool
 	 */
-    public function isLoggedIn() {
+    public function isLoggedIn() : bool {
         if (isset($_SESSION[self::$sessionUser])) {
             return true;
         } else {
@@ -131,8 +131,8 @@ class SessionStorage {
 	*/
     public function destroyUserSession()
     {
-      unset($_SESSION[self::$sessionUser]);
-      $_SESSION[self::$sessionUser] = null;
+        unset($_SESSION[self::$sessionUser]);
+        $_SESSION[self::$sessionUser] = null;
   
     }
 

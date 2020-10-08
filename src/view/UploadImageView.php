@@ -17,7 +17,7 @@ class UploadImageView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	public function response() {
+	public function response() : string {
 		return '
 		<h2>Upload image</h2>
 		<form method="post" action="?upload" enctype="multipart/form-data"> 

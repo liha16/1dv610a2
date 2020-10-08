@@ -5,12 +5,12 @@ namespace Model;
 class UserStorage {
 
   private static $storageFile = "model/users.json";
+  private static $usernameVal = "username";
+  private static $passwordVal = "password";
   private $users = array();
 
   /**
 	 * Constructor opens data storage
-	 *
-   * @return bool
 	 */
   public function __construct() {
     $jsonContents = file_get_contents(self::$storageFile);
@@ -20,12 +20,11 @@ class UserStorage {
   /**
 	 * Checks if user is registered
 	 *
-   * @return bool
 	 */
-  public function isUser(string $username) {
+  public function isUser(string $username) : bool {
     $result = false;
     foreach ($this->users as $user => $value) {      
-      if ($username == $value["username"]) { // TODO Strängberoende
+      if ($username == $value[self::$usernameVal]) {
         $result = true;
       }
     }
@@ -35,7 +34,7 @@ class UserStorage {
   /**
 	 *  
 	 * Gets data from user and saves in storage
-   * @return 
+   * @return void
 	 */
   public function saveNewUser(\Model\User $user) {
     $newMember = (object)array(); // new public user 
@@ -56,33 +55,21 @@ class UserStorage {
 
    /**
 	 * Converts to HTML entieties and erases blank spaces
-	 *
-   * @return bool
 	 */
-  public function filterInput(string $input) {
+  public function filterInput(string $input) : string {
     return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));	
   }
 
-  public function addUser()
-  {
-    # Future functions...
-  }
-
-  public function deleteUser()
-  {
-    # Future functions...
-  }
 
   /**
 	 * Checks if the user is exsist and if the password is correct
 	 *
    * @return bool
 	 */
-  public function authenticateUser(string $userName, string $password) // MOVE TO AUTHENITACE.php??
-  {
+  public function authenticateUser(string $userName, string $password) : bool {
     $result = false;
-    foreach ($this->users as $user => $value) {      // TODO strängberoenden
-      if ($userName == $value["username"] && $this->verifyHashedPassword($value["password"], $password)) {
+    foreach ($this->users as $user => $value) {
+      if ($userName == $value[self::$usernameVal] && $this->verifyHashedPassword($value[self::$passwordVal], $password)) {
         $result = true;
       }
     }
@@ -91,10 +78,8 @@ class UserStorage {
 
   /**
 	 * Checks if the password and hash matches
-	 *
-   * @return bool
 	 */
-  public function verifyHashedPassword(string $hash, string $password) {
+  public function verifyHashedPassword(string $hash, string $password) : bool {
     if (password_verify($password, $hash)) {
         return true;
     } else {
@@ -105,9 +90,8 @@ class UserStorage {
    /**
 	 * Hashes a password, returns a hashed version of it
 	 *
-   * @return string
 	 */
-  public function hashPassword($password) {
+  public function hashPassword($password) : string {
       return password_hash($password, PASSWORD_DEFAULT);
   }
 

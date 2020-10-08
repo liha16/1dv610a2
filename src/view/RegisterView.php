@@ -20,16 +20,19 @@ namespace View;
             //$this->session = $session;
 		    $this->message = $session->getMessage();
         }
+
         /**
          * Create Form to register
          *
          * @return  string HTML Form or button
          */
-        public function response(bool $isLoggedIn) {
+        public function response(bool $isLoggedIn) : string {
             return $this->generateRegisterFormHTML($this->message);
         }
 
-
+        /**
+         * Updates session message to view     
+         * */
         public function updateMessage($message) {
             $this->message = $message;
         }
@@ -40,7 +43,7 @@ namespace View;
         * @param $message, String output message
         * @return void, BUT writes to standard output!
         */
-        private function generateRegisterFormHTML(string $message) { // TODO PUT MIN AND MAX WITH VARBIABLES
+        private function generateRegisterFormHTML(string $message) : string { // TODO PUT MIN AND MAX WITH VARBIABLES
             return '
             <h2>Register new user</h2>
             <form method="post" action="?register" enctype="multipart/form-data"> 
@@ -78,9 +81,9 @@ namespace View;
         }
 
         /**
-        * 
+        * Check all input fields in form
         *
-        * @return string,
+        * @return void, but might throw exception
         */
         public function validateRegisterForm() {
             if ($this->inputHasInvalidLength()) { // TOO SHORT FIELDS
@@ -102,7 +105,6 @@ namespace View;
             else if ($this->hasNotValidChars($_POST[self::$name])) { // Invalid characters
                 throw new \Exception('Username contains invalid characters.');
             } 
-        
         }
 
         public function isRegisterFormPosted() : bool {
@@ -121,7 +123,7 @@ namespace View;
          *
          * @return bool, true if short
          */
-        private function inputHasInvalidLength() {
+        private function inputHasInvalidLength() : bool {
             return strlen($_POST[self::$name]) < self::$userNameMin && strlen($_POST[self::$password]) < self::$passwordMin;	
         }
 
@@ -130,7 +132,7 @@ namespace View;
          * 
          * * @return bool, true if not valid
          */
-        private function hasNotValidChars($string) {
+        private function hasNotValidChars($string) : bool{
             return preg_match('/[^A-Za-z0-9.#\\-$]/', $string);
         }
 
