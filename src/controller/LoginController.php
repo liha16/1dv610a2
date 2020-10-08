@@ -4,13 +4,11 @@ namespace Controller;
 
 class LoginController {
 
-    private $userStorage;
     private $session;
     private $loginView;
     
 
-    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session, \View\LoginView $loginView) {
-        $this->userStorage = $userStorage;
+    public function __construct(\Model\SessionStorage $session, \View\LoginView $loginView) {
         $this->session = $session;
         $this->loginView = $loginView;
         //$this->setLogin();
@@ -28,12 +26,12 @@ class LoginController {
         }
         if ($this->loginView->doesUserWantsToLogOut()) { // try to log out 
             if ($this->session->isLoggedIn()) {
-                $this->doLogout();
+                $this->loginView->doLogout();
             } 
         }
         if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
             if (!$this->session->isLoggedIn()) {
-                $message = $this->loginView->handleFormInput();
+                $message = $this->loginView->tryLogin();
                 $this->session->setMessage($message);
             } 
         } 
@@ -53,29 +51,29 @@ class LoginController {
         // Future: authenticate with cookies
     }
 
-    /**
-	 * Logs out user and unsets session
-     * Redirects to index.php
-	 *
-     * @return void, BUT writes to cookies and session!
-	 */
-    private function doLogout() {
-        $this->session->destroyUserSession();
-        $message = "Bye bye!";
-        $this->session->setMessage($message);
-        $this->loginView->unsetLoginCookie();
-        $this->headerLocation("index.php");
-    }
+    // /**
+	//  * Logs out user and unsets session
+    //  * Redirects to index.php
+	//  *
+    //  * @return void, BUT writes to cookies and session!
+	//  */
+    // private function doLogout() {
+    //     $this->session->destroyUserSession();
+    //     $message = "Bye bye!";
+    //     $this->session->setMessage($message);
+    //     $this->loginView->unsetLoginCookie();
+    //     $this->headerLocation("index.php");
+    // }
     
-    /**
-	 * Redirects to a valid path on server
-	 *
-	 */
-    private function headerLocation(string $file) {
-        $host  = $_SERVER['HTTP_HOST'];
-        $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-        header("Location: http://$host$uri/$file");
-        exit();
-    }
+    // /**
+	//  * Redirects to a valid path on server
+	//  *
+	//  */
+    // private function headerLocation(string $file) {
+    //     $host  = $_SERVER['HTTP_HOST'];
+    //     $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+    //     header("Location: http://$host$uri/$file");
+    //     exit();
+    // }
     
 }

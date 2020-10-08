@@ -26,6 +26,8 @@ class App {
     private $viewImages;
     private $loginView;
     private $loginController;
+    private $uploadController;
+    private $imageListView;
      
 
 	public function __construct() {
@@ -33,11 +35,14 @@ class App {
     $this->userStorage = new \Model\UserStorage();
     $this->routerView = new \View\RouterView();
     $this->viewImages = new \Model\ImageList();
-    $this->UploadImageView = new \View\UploadImageView();
-    $this->UploadController = new \Controller\UploadController($this->session, $this->UploadImageView, $this->viewImages);
+    $this->imageListView = new \View\ImageListView($this->viewImages->getImages());;
+    $this->uploadImageView = new \View\UploadImageView();
+    $this->registerView = new \View\RegisterView($this->userStorage, $this->session);
+    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->viewImages);
     $this->loginView = new \View\LoginView($this->userStorage, $this->session);
-    $this->loginController = new \Controller\LoginController($this->userStorage, $this->session, $this->loginView);
-    }
+    $this->loginController = new \Controller\LoginController($this->session, $this->loginView);
+    $this->registerController = new \Controller\RegisterController($this->userStorage, $this->session, $this->registerView);    
+}
 
     public function run() {
         $this->route();
@@ -51,21 +56,19 @@ class App {
         $this->loginController->setLogin();
         $this->formLayout = new \View\LoginView($this->userStorage, $this->session);
 
-
-        if ($this->session->isLoggedIn()) { // LOGGED IN ONLY
+        if ($this->session->isLoggedIn()) { // LOGGED IN ONLY:
             if ($this->routerView->doesUserWantsUploadImage()) { // upload image
-                //new \Controller\UploadController($this->session);
-                $this->UploadImageView->setMessage($this->session->getMessage());
-                $this->formLayout = $this->UploadImageView;
+                $this->uploadImageView->setMessage($this->session->getMessage());
+                $this->formLayout = $this->uploadImageView;
             } 
             if ($this->routerView->doesUserWantsToViewImages()) { // view images
-                $this->formLayout = new \View\ImageListView($this->viewImages->getImages());
+                $this->formLayout = $this->imageListView;
             } 
         }
-
         if ($this->routerView->doesUserWantsToRegister()) { // register new user
-            new \Controller\RegisterController($this->userStorage, $this->session);
-            $this->formLayout = new \View\RegisterView($this->userStorage, $this->session->getMessage());
+            $this->registerController->setRegister();
+            $this->registerView->updateMessage($this->session->getMessage());
+            $this->formLayout = $this->registerView;
         }
     }
 

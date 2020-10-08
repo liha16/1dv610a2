@@ -105,7 +105,7 @@ class LoginView {
 		return isset($_POST[self::$login]);
 	}
 
-	public function handleFormInput() : string {
+	public function tryLogin() : string {
 		if (strlen($_POST[self::$name]) < 1) { // no username
             $message = "Username is missing";
         } else if (strlen($_POST[self::$password]) < 1) { // no password
@@ -118,6 +118,16 @@ class LoginView {
             $message = "Wrong name or password";
 		} 
 		return $message;
+	}
+
+	public function doLogout() : string {
+
+		$this->session->destroyUserSession();
+        $message = "Bye bye!";
+        $this->session->setMessage($message);
+        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
+        $this->headerLocation("index.php");
+		
 	}
 
 	/**
@@ -140,10 +150,6 @@ class LoginView {
 	private function setLoginCookie() { // Not finished yet
         $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
         $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
-	}
-
-	public function unsetLoginCookie() {
-        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
 	}
 	
 	public function isRememberedCookie() {
