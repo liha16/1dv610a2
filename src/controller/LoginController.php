@@ -4,13 +4,6 @@ namespace Controller;
 
 class LoginController {
 
-    //private static $login = 'LoginView::Login';
-	//private static $logout = 'LoginView::Logout';
-	private static $name = 'LoginView::UserName';
-	private static $password = 'LoginView::Password';
-	private static $cookieName = 'LoginView::CookieName';
-	private static $cookiePassword = 'LoginView::CookiePassword';
-	private static $keep = 'LoginView::KeepMeLoggedIn';
     private $userStorage;
     private $session;
     private $loginView;
@@ -30,7 +23,7 @@ class LoginController {
      * @return void, BUT writes to cookies and session!
 	 */
     public function setLogin() {
-        if ($this->session->isRemembered(self::$cookieName)) {
+        if ($this->loginView->isRememberedCookie()) {
             $this->useRemembered();
         }
         if ($this->loginView->doesUserWantsToLogOut()) { // try to log out 
@@ -40,33 +33,11 @@ class LoginController {
         }
         if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
             if (!$this->session->isLoggedIn()) {
-                //$this->handleFormInput();
                 $message = $this->loginView->handleFormInput();
-                $this->setMessage($message);
+                $this->session->setMessage($message);
             } 
         } 
     }
-
-    /**
-	 *  Handles input from form 
-	 *
-     * @return void
-	 */
-    private function handleFormInput() {
-        if (strlen($_POST[self::$name]) < 1) { // no username
-            $message = "Username is missing";
-        } else if (strlen($_POST[self::$password]) < 1) { // no password
-            $message = "Password is missing";
-        } else if ($this->userStorage->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
-            $this->doLogin();
-        } else if ($this->userStorage->isUser($_POST[self::$name])) { // wrong password but user exsist
-            $message = "Wrong name or password";
-        } else  { // Wrong password or username
-            $message = "Wrong name or password";
-        } 
-        
-    }
-
 
     /**
 	 * Sets session message and user if credentials are in cookies
@@ -76,9 +47,9 @@ class LoginController {
     private function useRemembered() {
         if (!$this->session->issetMessage()) {
             $message = "Welcome back with cookie";
-            $this->setMessage($message);
+            $this->session->setMessage($message);
         }
-        $this->session->setUserSession($_COOKIE[self::$cookieName]);
+        $this->loginView->setUserSession();
         // Future: authenticate with cookies
     }
 
@@ -91,29 +62,11 @@ class LoginController {
     private function doLogout() {
         $this->session->destroyUserSession();
         $message = "Bye bye!";
-        $this->setMessage($message);
-        $this->unsetLoginCookie();
+        $this->session->setMessage($message);
+        $this->loginView->unsetLoginCookie();
         $this->headerLocation("index.php");
     }
     
-     /**
-	 * Logs in user and sets session
-	 *
-     * @return void, BUT writes to cookies and session!
-	 */
-    private function doLogin() {
-        if (isset($_POST[self::$keep])) { // Keep me logged in
-            $message = "Welcome and you will be remembered";     
-            $this->setLoginCookie();
-        } else {
-            $message = "Welcome";                   
-        }
-        $this->session->setUserSession($_POST[self::$name]);
-        $this->setMessage($message);
-        $this->headerLocation("index.php");
-    }
-
-
     /**
 	 * Redirects to a valid path on server
 	 *
@@ -125,18 +78,4 @@ class LoginController {
         exit();
     }
     
-    private function setMessage(string $message) {
-        $this->session->setMessage($message);		
-    }
-
-    private function setLoginCookie() { // Not finished yet
-        $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
-        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
-    }
-
-    private function unsetLoginCookie() {
-        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
-    }
 }
-
-?>

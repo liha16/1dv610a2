@@ -141,6 +141,18 @@ class LoginView {
         $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
         $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
 	}
+
+	public function unsetLoginCookie() {
+        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
+	}
+	
+	public function isRememberedCookie() {
+		return $this->session->isRemembered(self::$cookieName);
+	}
+	
+	public function setUserSession() {
+		$this->session->setUserSession($_COOKIE[self::$cookieName]);
+	}
 	
 	/**
 	 * Redirects to a valid path on server
