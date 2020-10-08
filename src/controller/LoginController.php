@@ -4,8 +4,8 @@ namespace Controller;
 
 class LoginController {
 
-    private static $login = 'LoginView::Login';
-	private static $logout = 'LoginView::Logout';
+    //private static $login = 'LoginView::Login';
+	//private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';
 	private static $password = 'LoginView::Password';
 	private static $cookieName = 'LoginView::CookieName';
@@ -13,12 +13,14 @@ class LoginController {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
     private $userStorage;
     private $session;
+    private $loginView;
     
 
-    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session) {
+    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session, \View\LoginView $loginView) {
         $this->userStorage = $userStorage;
         $this->session = $session;
-        $this->setLogin();
+        $this->loginView = $loginView;
+        //$this->setLogin();
     }
 
     /**
@@ -28,16 +30,20 @@ class LoginController {
      * @return void, BUT writes to cookies and session!
 	 */
     public function setLogin() {
-        if ($this->session->isRemembered(self::$cookieName)) { 
+        if ($this->session->isRemembered(self::$cookieName)) {
             $this->useRemembered();
         }
-        if (isset($_POST[self::$logout])) { // log out 
+        if ($this->loginView->doesUserWantsToLogOut()) { // try to log out 
             if ($this->session->isLoggedIn()) {
                 $this->doLogout();
             } 
         }
-        if (isset($_POST[self::$login]) && !$this->session->isLoggedIn()) { // try to log in
-            $this->handleFormInput();
+        if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
+            if (!$this->session->isLoggedIn()) {
+                //$this->handleFormInput();
+                $message = $this->loginView->handleFormInput();
+                $this->setMessage($message);
+            } 
         } 
     }
 
@@ -58,7 +64,7 @@ class LoginController {
         } else  { // Wrong password or username
             $message = "Wrong name or password";
         } 
-        $this->setMessage($message);
+        
     }
 
 
@@ -126,7 +132,7 @@ class LoginController {
     private function setLoginCookie() { // Not finished yet
         $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
         $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
-      }
+    }
 
     private function unsetLoginCookie() {
         $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);

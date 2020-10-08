@@ -24,6 +24,8 @@ class App {
     private $formLayout;
     private $uploadImageView;
     private $viewImages;
+    private $loginView;
+    private $loginController;
      
 
 	public function __construct() {
@@ -33,7 +35,8 @@ class App {
     $this->viewImages = new \Model\ImageList();
     $this->UploadImageView = new \View\UploadImageView();
     $this->UploadController = new \Controller\UploadController($this->session, $this->UploadImageView, $this->viewImages);
-
+    $this->loginView = new \View\LoginView($this->userStorage, $this->session);
+    $this->loginController = new \Controller\LoginController($this->userStorage, $this->session, $this->loginView);
     }
 
     public function run() {
@@ -45,8 +48,8 @@ class App {
     private function route() {
 
         // Load default
-        new \Controller\LoginController($this->userStorage, $this->session);
-        $this->formLayout = new \View\LoginView($this->userStorage, $this->session->getMessage());
+        $this->loginController->setLogin();
+        $this->formLayout = new \View\LoginView($this->userStorage, $this->session);
 
 
         if ($this->session->isLoggedIn()) { // LOGGED IN ONLY
@@ -64,8 +67,6 @@ class App {
             new \Controller\RegisterController($this->userStorage, $this->session);
             $this->formLayout = new \View\RegisterView($this->userStorage, $this->session->getMessage());
         }
-
-        
     }
 
     private function loadLayouts() {

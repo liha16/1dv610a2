@@ -11,7 +11,6 @@ class ImageList { // TODO seperate image and imageList?
 
   public function __construct() {
       $this->images = array_slice(scandir($this->target_dir), 3); // 3 is to delete . and .. files
-    
   }
 
    /**

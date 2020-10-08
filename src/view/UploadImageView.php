@@ -8,14 +8,9 @@ class UploadImageView {
 	private static $upload = 'UploadView::Upload';
 	private $message;
 
-	// public function __construct(string $message) {
-	// 	$this->message = $message;
-	//   }
-
 	public function setMessage(string $message) {
 		$this->message = $message;	  
 	}
-	  
 
 	/**
 	* Generate HTML code on the output buffer for the upload form
@@ -30,9 +25,9 @@ class UploadImageView {
 					<legend>Select image to upload</legend>
 					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
-					<label for="' . self::$file . '">File :</label>
+					<label for="' . self::$file . '">File :</label><br>
 					<input type="file" id="' . self::$file . '" name="' . self::$file . '" />
-
+					<br>
 					<input type="submit" name="' . self::$upload . '" value="Upload" />
 				</fieldset>
 			</form>
