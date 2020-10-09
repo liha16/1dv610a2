@@ -31,11 +31,8 @@ class LoginController {
         }
         if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
             if (!$this->userSession->isLoggedIn()) {
-                //$message = $this->loginView->validateLogin();
-                //$this->session->setMessage($message);
                 try {
                     $this->loginView->validateLogin();
-                    //$this->loginView->setMessage();
                 } catch (\Exception $e) {
                     $this->loginView->setMessage($e->getMessage());
                 }

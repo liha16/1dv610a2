@@ -36,7 +36,7 @@ class LoginView {
 	 *
 	 * @return  string HTML Form or button
 	 */
-	public function response(bool $isLoggedIn) {
+	public function response(bool $isLoggedIn) : string {
 
 		if ($isLoggedIn) {
 			$response = $this->generateLoggedInHTML();
@@ -52,14 +52,13 @@ class LoginView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	private function generateLoggedInHTML() : string{
+	private function generateLoggedInHTML() : string {
 		return '
 			<form method="post" action="?" >
 				<p id="' . self::$messageId . '">' . $this->message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form><br>
 		';
-		//' . $this->uploadImageView->response();
 	}
 	
 	/**
@@ -112,24 +111,19 @@ class LoginView {
 
 	public function validateLogin() {
 		if (strlen($_POST[self::$name]) < 1) { // no username
-			//$message = "Username is missing";
 			throw new \Exception('Username is missing');
         } else if (strlen($_POST[self::$password]) < 1) { // no password
-			//$message = "Password is missing";
 			throw new \Exception('Password is missing');
         } else if ($this->userList->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
             $this->doLogin();
         } else if ($this->userList->isUser($_POST[self::$name])) { // wrong password but user exsist
-			//$message = "Wrong name or password";
 			throw new \Exception('Wrong name or password');
         } else  { // Wrong password or username
-			//$message = "Wrong name or password";
 			throw new \Exception('Wrong name or password');
 		} 
-		//return $message;
 	}
 
-	public function doLogout() : string {
+	public function doLogout() {
 		$this->userSession->destroyUserSession();
         $message = "Bye bye!";
 		$this->msgSession->setMessage($message); // MessageSession
@@ -160,7 +154,7 @@ class LoginView {
         $this->userSession->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
 	}
 	
-	public function isRememberedCookie() {
+	public function isRememberedCookie() : bool {
 		return $this->userSession->isRemembered(self::$cookieName);
 	}
 	

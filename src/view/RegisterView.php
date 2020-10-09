@@ -11,14 +11,6 @@ namespace View;
         private static $userNameMin = 3;
         private static $passwordMin = 6;
         private $message;
-        //private $userStorage;
-
-
-        //public function __construct(\Model\UserStorage $userStorage) {
-            //$this->userStorage = $userStorage;
-            //$this->session = $session;
-		  //  $this->message = $session->getMessage();
-        //}
 
         /**
          * Create Form to register
@@ -42,7 +34,7 @@ namespace View;
         * @param $message, String output message
         * @return void, BUT writes to standard output!
         */
-        private function generateRegisterFormHTML(string $message) : string { // TODO PUT MIN AND MAX WITH VARBIABLES
+        private function generateRegisterFormHTML(string $message) : string {
             return '
             <h2>Register new user</h2>
             <form method="post" action="?register" enctype="multipart/form-data"> 
@@ -98,9 +90,6 @@ namespace View;
             else if ($_POST[self::$password] !== $_POST[self::$passwordR]) { // TOO SHORT NAME FIELD
                 throw new \Exception('Passwords do not match.');
             } 
-            //else if ($this->userStorage->isUser($_POST[self::$name])) { // User exsist
-               // throw new \Exception('User exists, pick another username.');
-           // }
             else if ($this->hasNotValidChars($_POST[self::$name])) { // Invalid characters
                 throw new \Exception('Username contains invalid characters.');
             } 

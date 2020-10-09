@@ -26,7 +26,6 @@ class ImageList { // TODO seperate image and imageList?
 	*/
   public function uploadImage($fileToUpload) : string {
       if (empty($fileToUpload["tmp_name"])) { // No image selected
-         // $message = "You must select an image to upload.";
           throw new \Exception('You must select an image to upload.');
       } else {
           $targetFileName = basename($fileToUpload["name"]);
@@ -34,23 +33,17 @@ class ImageList { // TODO seperate image and imageList?
           $imageFileType = strtolower(pathinfo($targetFile,PATHINFO_EXTENSION));
 
           if (!getimagesize($fileToUpload["tmp_name"])) { // Is it an image
-              //$message =  "File is not an image.";
               throw new \Exception('File is not an image.');
           } else if (file_exists($targetFile)) { // Check if file already exists
-             // $message = "A file with that name already exists"; 
               throw new \Exception('A file with that name already exists');
-              
           } else if ($fileToUpload["size"] > $this->maxSize) { // Check file size
-            //  $message = "The image is too large, max allowed " . $this->maxSize;
               throw new \Exception("The image is too large, max allowed " . $this->maxSize);
           } else if (!in_array($imageFileType, $this->allowedFileTypes)) { // Allow certain file formats
-              //$message = "Filetype " . $imageFileType . " is not allowed.";
               throw new \Exception("Filetype " . $imageFileType . " is not allowed.");
           } else { 
               if (move_uploaded_file($fileToUpload["tmp_name"], $targetFile)) { // Try to upload
                   $message = "The file ". $this->getImageLink(htmlspecialchars($targetFileName)) . " has been uploaded.";
               } else {
-                 // $message = "Sorry, there was an error uploading your file.";
                   throw new \Exception("Sorry, there was an error uploading your file.");
                   
               }

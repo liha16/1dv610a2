@@ -66,9 +66,15 @@ class RegisterController {
         $newUser = new \Model\User;
         $newUser->setName($this->registerView->getName());
         $newUser->setPassword($this->registerView->getPassword());
-        $this->userList->saveNewUser($newUser);
-        $message = "Registered new user."; // TODO exceptions
-        $this->userSession->destroyUserSession(); // logs out if user wants to register
+        
+        try {
+            $this->userList->saveNewUser($newUser);
+            $this->userSession->destroyUserSession(); // logs out if user wants to register
+            $message = "Registered new user.";
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+        }
+        
         $this->msgSession->setMessage($message);
         $this->headerLocation("index.php");
     }

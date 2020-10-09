@@ -23,7 +23,6 @@ class UserSession {
         setcookie($CookieNameUser , $CookieValueUser, time() + self::$cookieDuration);  
         setcookie($CookieNamePassword , $CookieValuePassword, time() + self::$cookieDuration);
     }
-    // TODO: TOO MANY ARGUMENTS
 
     /**
     * Unsets user cookies for log in

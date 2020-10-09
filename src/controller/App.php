@@ -24,7 +24,7 @@ class App {
     private $userList;
     private $pageLayout;
     private $uploadImageView;
-    private $viewImages;
+    private $imageModel;
     private $loginView;
     private $loginController;
     private $uploadController;
@@ -70,13 +70,11 @@ class App {
     private function route() {
         // Load default
         $this->loginController->setLogin();
-        //$this->pageLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
         $this->pageLayout = $this->loginView;
 
         if ($this->userSession->isLoggedIn()) { // LOGGED IN ONLY:
             if ($this->routerView->doesUserWantsUploadImage()) { // upload image
                 $this->uploadController->handleUpload();
-                //$this->uploadImageView->setMessage($this->session->getMessage());
                 $this->pageLayout = $this->uploadImageView;
             } 
             if ($this->routerView->doesUserWantsToViewImages()) { // view images
@@ -85,7 +83,6 @@ class App {
         }
         if ($this->routerView->doesUserWantsToRegister()) { // register new user
             $this->registerController->setRegister();
-            //$this->registerView->updateMessage($this->session->getMessage());
             $this->pageLayout = $this->registerView;
         }
     }

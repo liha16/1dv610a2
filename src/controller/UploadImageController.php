@@ -25,10 +25,8 @@ class UploadImageController {
             try {
                 $fileToUpload = $this->uploadImageView->getFileToUpload();
                 $message = $this->imageListModel->uploadImage($fileToUpload);
-                //$this->session->setMessage($message);
                 $this->uploadImageView->setMessage($message);
             } catch (\Exception $e) {
-               // $this->session->setMessage($e->getMessage());
                 $this->uploadImageView->setMessage($e->getMessage());
             }
             

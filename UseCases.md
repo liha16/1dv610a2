@@ -14,11 +14,12 @@ A user is authenticated, UC1
 3. User choses an image to upload
 4. The system uploads the image and presents feedback message and link to image 
 
-### Alernate scenario
+
+### Alternate scenario
 
 4.a The system could not upload the image
-    1. System presents feedback message
-    2. Step 3 in main scenario
+1. System presents feedback message
+2. Step 3 in main scenario
 
 
 ## UC6 View uploaded images

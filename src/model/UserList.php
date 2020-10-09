@@ -44,18 +44,21 @@ class UserList {
 	 */
   public function saveNewUser(\Model\User $user) {
     $newMember = (object)array(); // new public user 
-    $newMember->username = $user->getUsername(); // TODO : Make method that checks rules for name
-    $newMember->password = $this->hashPassword($user->getPassword()); // TODO : Make method that checks rules for personal NR
+    $newMember->username = $user->getUsername();
+    $newMember->password = $this->hashPassword($user->getPassword());
     $this->saveMemberToFile($newMember);
   }
 
   /**
   * Saves user as last position in db file
   */
-  public function saveMemberToFile($user) {
+  private function saveMemberToFile($user) {
     $this->users[count($this->users)] = $user;
     $usersJSON = json_encode($this->users);
-    file_put_contents(self::$storageFile, $usersJSON);
+    if (file_put_contents(self::$storageFile, $usersJSON) == false) {
+      throw new \Exception("Could not save user");
+      
+    }
 }
 
 
