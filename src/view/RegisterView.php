@@ -11,14 +11,14 @@ namespace View;
         private static $userNameMin = 3;
         private static $passwordMin = 6;
         private $message;
-        private $userStorage;
+        //private $userStorage;
 
 
-        public function __construct(\Model\UserStorage $userStorage) {
-            $this->userStorage = $userStorage;
+        //public function __construct(\Model\UserStorage $userStorage) {
+            //$this->userStorage = $userStorage;
             //$this->session = $session;
 		  //  $this->message = $session->getMessage();
-        }
+        //}
 
         /**
          * Create Form to register
@@ -74,7 +74,7 @@ namespace View;
             $usernameField = "";
             if (isset($_POST[self::$name])) {
                $usernameField = strip_tags($_POST[self::$name]);
-               $usernameField = $this->userStorage->filterInput($usernameField);
+               $usernameField = $this->filterInput($usernameField);
             }
             return $usernameField;
         }
@@ -98,9 +98,9 @@ namespace View;
             else if ($_POST[self::$password] !== $_POST[self::$passwordR]) { // TOO SHORT NAME FIELD
                 throw new \Exception('Passwords do not match.');
             } 
-            else if ($this->userStorage->isUser($_POST[self::$name])) { // User exsist
-                throw new \Exception('User exists, pick another username.');
-            }
+            //else if ($this->userStorage->isUser($_POST[self::$name])) { // User exsist
+               // throw new \Exception('User exists, pick another username.');
+           // }
             else if ($this->hasNotValidChars($_POST[self::$name])) { // Invalid characters
                 throw new \Exception('Username contains invalid characters.');
             } 
@@ -135,6 +135,12 @@ namespace View;
             return preg_match('/[^A-Za-z0-9.#\\-$]/', $string);
         }
 
+        /**
+        * Converts to HTML entieties and erases blank spaces
+         */
+        public function filterInput(string $input) : string {
+            return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));	
+        }
 
         
 

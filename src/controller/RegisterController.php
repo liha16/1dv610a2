@@ -27,12 +27,19 @@ class RegisterController {
         if ($this->registerView->isRegisterFormPosted()) {
             try {
                 $this->registerView->validateRegisterForm();
+                $this->isUsernameAvailable();
                 $this->registerUser(); 
             } catch (\Exception $e) {
                 $this->session->setMessage($e->getMessage());
             }
         }
         $this->registerView->updateMessage($this->session->getMessage());
+    }
+
+    private function isUsernameAvailable() {
+        if ($this->userStorage->isUser($this->registerView->getName())) {
+            throw new \Exception("User exists, pick another username.");
+        }
     }
 
     /**
@@ -45,6 +52,8 @@ class RegisterController {
         header("Location: http://$host$uri/$file");
         exit();
     }
+
+    
 
     /**
 	 * Creates new user object and saves to Storage

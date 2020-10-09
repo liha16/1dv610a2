@@ -42,7 +42,7 @@ class App {
     $this->dtv = new \View\DateTimeView();
     $this->imageListView = new \View\ImageListView($this->imageModel);
     $this->uploadImageView = new \View\UploadImageView();
-    $this->registerView = new \View\RegisterView($this->userStorage);
+    $this->registerView = new \View\RegisterView();
     $this->loginView = new \View\LoginView($this->userStorage, $this->session);
     $this->layoutView = new \View\LayoutView();
     
