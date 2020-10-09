@@ -43,7 +43,7 @@ class UserList {
    * @return void
 	 */
   public function saveNewUser(\Model\User $user) {
-    $newMember = (object)array(); // new public user 
+    $newMember = (object)array();
     $newMember->username = $user->getUsername();
     $newMember->password = $this->hashPassword($user->getPassword());
     $this->saveMemberToFile($newMember);
