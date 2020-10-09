@@ -5,7 +5,7 @@ namespace Controller;
 //INCLUDE THE FILES NEEDED...
 require_once('controller/LoginController.php');
 require_once('controller/RegisterController.php');
-require_once('controller/UploadController.php');
+require_once('controller/UploadImageController.php');
 require_once('view/UploadImageView.php');
 require_once('view/LoginView.php');
 require_once('view/RegisterView.php');
@@ -14,14 +14,14 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('view/RouterView.php');
 require_once('view/MessageSession.php');
-require_once('model/UserStorage.php');
+require_once('model/UserList.php');
 require_once('model/UserSession.php');
 
 class App {
 
     
     private $userSession;
-    private $userStorage;
+    private $userList;
     private $pageLayout;
     private $uploadImageView;
     private $viewImages;
@@ -34,7 +34,7 @@ class App {
 	public function __construct() {
     
     $this->userSession = new \Model\UserSession();
-    $this->userStorage = new \Model\UserStorage();
+    $this->userList = new \Model\UserList();
     $this->imageModel = new \Model\ImageList();
 
     $this->messageSession = new \View\MessageSession();
@@ -43,12 +43,12 @@ class App {
     $this->imageListView = new \View\ImageListView($this->imageModel);
     $this->uploadImageView = new \View\UploadImageView();
     $this->registerView = new \View\RegisterView();
-    $this->loginView = new \View\LoginView($this->userStorage, $this->userSession, $this->messageSession);
+    $this->loginView = new \View\LoginView($this->userList, $this->userSession, $this->messageSession);
     $this->layoutView = new \View\LayoutView();
     
-    $this->uploadController = new \Controller\UploadController($this->uploadImageView, $this->imageModel);
+    $this->uploadController = new \Controller\UploadImageController($this->uploadImageView, $this->imageModel);
     $this->loginController = new \Controller\LoginController($this->userSession, $this->loginView, $this->messageSession);
-    $this->registerController = new \Controller\RegisterController($this->userStorage, $this->userSession, $this->registerView, $this->messageSession);    
+    $this->registerController = new \Controller\RegisterController($this->userList, $this->userSession, $this->registerView, $this->messageSession);    
 }
 
     /**

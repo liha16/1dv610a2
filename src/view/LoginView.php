@@ -11,14 +11,14 @@ class LoginView {
  	private static $cookiePassword = 'LoginView::CookiePassword'; // For future implementation
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-	private $userStorage;
+	private $userList;
 	private $userSession;
 	private $msgSession;
 	private $message;
 
-	public function __construct(\Model\UserStorage $userStorage, \Model\UserSession $userSession, \View\MessageSession $msgSession) 
+	public function __construct(\Model\UserList $userList, \Model\UserSession $userSession, \View\MessageSession $msgSession) 
 	  {
-		$this->userStorage = $userStorage;
+		$this->userList = $userList;
 		$this->userSession = $userSession;
 		$this->msgSession = $msgSession;
 		$this->message = $msgSession->getMessage();
@@ -97,7 +97,7 @@ class LoginView {
 	private function getRequestUserName() : string {
 		$usernameField = "";
 		if (isset($_POST[self::$name])) {
-			$usernameField = $this->userStorage->filterInput($_POST[self::$name]);
+			$usernameField = $this->userList->filterInput($_POST[self::$name]);
 		}
 		return $usernameField;
 	}
@@ -117,9 +117,9 @@ class LoginView {
         } else if (strlen($_POST[self::$password]) < 1) { // no password
 			//$message = "Password is missing";
 			throw new \Exception('Password is missing');
-        } else if ($this->userStorage->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
+        } else if ($this->userList->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
             $this->doLogin();
-        } else if ($this->userStorage->isUser($_POST[self::$name])) { // wrong password but user exsist
+        } else if ($this->userList->isUser($_POST[self::$name])) { // wrong password but user exsist
 			//$message = "Wrong name or password";
 			throw new \Exception('Wrong name or password');
         } else  { // Wrong password or username
@@ -156,7 +156,7 @@ class LoginView {
 	}
 	
 	private function setLoginCookie() { // Not finished yet
-        $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
+        $hashPass = $this->userList->hashPassword($_POST[self::$password]);
         $this->userSession->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
 	}
 	

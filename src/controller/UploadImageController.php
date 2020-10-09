@@ -5,7 +5,7 @@ namespace Controller;
 require_once('model/ImageList.php');
 
 
-class UploadController {
+class UploadImageController {
 
     private $uploadImageView;
     private $imageListModel;

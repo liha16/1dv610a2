@@ -7,14 +7,14 @@ require_once('model/User.php');
 
 class RegisterController {
 
-    private $userStorage;
+    private $userList;
     private $userSession;
     private $registerView;
     private $msgSession;
 
 	
-    public function __construct(\Model\UserStorage $userStorage, \Model\UserSession $userSession, \View\RegisterView $registerView, \View\MessageSession $msgSession) {
-        $this->userStorage = $userStorage;
+    public function __construct(\Model\UserList $userList, \Model\UserSession $userSession, \View\RegisterView $registerView, \View\MessageSession $msgSession) {
+        $this->userList = $userList;
         $this->userSession = $userSession;
         $this->registerView = $registerView;
         $this->msgSession = $msgSession;
@@ -39,7 +39,7 @@ class RegisterController {
     }
 
     private function isUsernameAvailable() {
-        if ($this->userStorage->isUser($this->registerView->getName())) {
+        if ($this->userList->isUser($this->registerView->getName())) {
             throw new \Exception("User exists, pick another username.");
         }
     }
@@ -66,7 +66,7 @@ class RegisterController {
         $newUser = new \Model\User;
         $newUser->setName($this->registerView->getName());
         $newUser->setPassword($this->registerView->getPassword());
-        $this->userStorage->saveNewUser($newUser);
+        $this->userList->saveNewUser($newUser);
         $message = "Registered new user."; // TODO exceptions
         $this->userSession->destroyUserSession(); // logs out if user wants to register
         $this->msgSession->setMessage($message);

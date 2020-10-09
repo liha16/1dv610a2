@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class UserStorage {
+class UserList {
 
   private static $storageFile = "model/users.json";
   private static $usernameVal = "username";
