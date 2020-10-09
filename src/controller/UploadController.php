@@ -25,9 +25,13 @@ class UploadController {
 	 */
     private function handleUpload() {
         if ($this->UploadImageView->isUploadFormPosted()) {
-            $fileToUpload = $this->UploadImageView->getFileToUpload();
-            $message = $this->imageListModel->uploadImage($fileToUpload);
-            $this->session->setMessage($message);
+            try {
+                $fileToUpload = $this->UploadImageView->getFileToUpload();
+                $message = $this->imageListModel->uploadImage($fileToUpload);
+                $this->session->setMessage($message);
+            } catch (\Exception $e) {
+                $this->session->setMessage($e->getMessage());
+            }
         }
     }
 

@@ -11,7 +11,6 @@ class LoginController {
     public function __construct(\Model\SessionStorage $session, \View\LoginView $loginView) {
         $this->session = $session;
         $this->loginView = $loginView;
-        //$this->setLogin();
     }
 
     /**
@@ -30,8 +29,13 @@ class LoginController {
         }
         if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
             if (!$this->session->isLoggedIn()) {
-                $message = $this->loginView->tryLogin();
-                $this->session->setMessage($message);
+                //$message = $this->loginView->validateLogin();
+                //$this->session->setMessage($message);
+                try {
+                    $this->loginView->validateLogin();
+                } catch (\Exception $e) {
+                    $this->session->setMessage($e->getMessage());
+                }
             } 
         } 
     }

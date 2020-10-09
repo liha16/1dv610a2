@@ -7,8 +7,8 @@ class ImageListView {
     private $images;
     private $folder = "uploads/";
 
-	public function __construct($imageList) {
-        $this->images = $imageList;
+	public function __construct(\Model\ImageList $imageList) {
+        $this->images = $imageList->getImages();
 	}
 
 

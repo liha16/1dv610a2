@@ -104,25 +104,29 @@ class LoginView {
 		return isset($_POST[self::$login]);
 	}
 
-	public function tryLogin() : string {
+	public function validateLogin() {
 		if (strlen($_POST[self::$name]) < 1) { // no username
-            $message = "Username is missing";
+			//$message = "Username is missing";
+			throw new \Exception('Username is missing');
         } else if (strlen($_POST[self::$password]) < 1) { // no password
-            $message = "Password is missing";
+			//$message = "Password is missing";
+			throw new \Exception('Password is missing');
         } else if ($this->userStorage->authenticateUser($_POST[self::$name], $_POST[self::$password])) { // Log in
             $this->doLogin();
         } else if ($this->userStorage->isUser($_POST[self::$name])) { // wrong password but user exsist
-            $message = "Wrong name or password";
+			//$message = "Wrong name or password";
+			throw new \Exception('Wrong name or password');
         } else  { // Wrong password or username
-            $message = "Wrong name or password";
+			//$message = "Wrong name or password";
+			throw new \Exception('Wrong name or password');
 		} 
-		return $message;
+		//return $message;
 	}
 
 	public function doLogout() : string {
-		$this->session->destroyUserSession();
+		$this->session->destroyUserSession(); // MessageSession
         $message = "Bye bye!";
-        $this->session->setMessage($message);
+        $this->session->setMessage($message); // MessageSession
         $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
         $this->headerLocation("index.php");
 		
@@ -141,7 +145,7 @@ class LoginView {
             $message = "Welcome";                   
         }
         $this->session->setUserSession($_POST[self::$name]);
-        $this->session->setMessage($message);
+        $this->session->setMessage($message); // MessageSession
         $this->headerLocation("index.php");
 	}
 	

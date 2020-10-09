@@ -13,6 +13,7 @@ require_once('view/ImageListView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('view/RouterView.php');
+require_once('view/MessageStorage.php');
 require_once('model/UserStorage.php');
 require_once('model/SessionStorage.php');
 
@@ -34,17 +35,18 @@ class App {
     
     $this->session = new \Model\SessionStorage();
     $this->userStorage = new \Model\UserStorage();
-    $this->viewImages = new \Model\ImageList();
-   // $this->messageStorage = new \View\MessageStorage();
+    $this->imageModel = new \Model\ImageList();
+
+    $this->messageStorage = new \View\MessageStorage();
     $this->routerView = new \View\RouterView();
     $this->dtv = new \View\DateTimeView();
-    $this->imageListView = new \View\ImageListView($this->viewImages->getImages());;
+    $this->imageListView = new \View\ImageListView($this->imageModel);
     $this->uploadImageView = new \View\UploadImageView();
     $this->registerView = new \View\RegisterView($this->userStorage, $this->session);
     $this->loginView = new \View\LoginView($this->userStorage, $this->session);
     $this->layoutView = new \View\LayoutView();
     
-    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->viewImages);
+    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->imageModel);
     $this->loginController = new \Controller\LoginController($this->session, $this->loginView);
     $this->registerController = new \Controller\RegisterController($this->userStorage, $this->session, $this->registerView);    
 }

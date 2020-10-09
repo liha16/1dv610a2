@@ -6,7 +6,7 @@ class LayoutView {
   
   public function render(bool $isLoggedIn, $v, \View\DateTimeView $dtv, \View\RouterView $router) {
     echo '<!DOCTYPE html>
-      <htmllang="en">
+      <html lang="en">
         <head>
           <meta charset="utf-8">
           <title>Login Example</title>

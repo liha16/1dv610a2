@@ -13,8 +13,14 @@ class UserStorage {
 	 * Constructor opens data storage
 	 */
   public function __construct() {
-    $jsonContents = file_get_contents(self::$storageFile);
-    $this->users = json_decode($jsonContents, true);
+    if (file_exists(self::$storageFile)) {
+      $jsonContents = file_get_contents(self::$storageFile);
+      $this->users = json_decode($jsonContents, true);
+    } else {
+        throw new \Exception("No file " . $this->storageFile . " found on server");
+        // Never catched but will cause and error
+    }
+    
   }
 
   /**
