@@ -30,7 +30,7 @@ namespace View;
             }
         }
 
-        public function renderIsLoggedIn(bool $isLoggedIn) : string { // TODO Move this
+        public function renderIsLoggedIn(bool $isLoggedIn) : string {
           if ($isLoggedIn) {
             return '
             <a href="?">Home</a>

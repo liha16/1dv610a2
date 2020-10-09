@@ -34,10 +34,8 @@ class User {
 
     /**
 	* Converts to HTML entieties and erases blank spaces
-	*
-    * @return bool
 	*/
-    private function filterInput(string $input) {
+    private function filterInput(string $input) : string {
         return trim(preg_replace('/[^a-zA-Z0-9\s]/', '',$input));
     }
 

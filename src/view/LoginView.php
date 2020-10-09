@@ -25,7 +25,7 @@ class LoginView {
 	  }
 
 
-	  public function setMessage(string $message) {
+	  public function setMessage(string $message) { // sets this views current message
 		$this->message = $message;	  
 	}
 
@@ -123,6 +123,11 @@ class LoginView {
 		} 
 	}
 
+	/**
+	 * Logs out user and sets session
+	 *
+     * @return void, BUT writes to cookies and session!
+	 */
 	public function doLogout() {
 		$this->userSession->destroyUserSession();
         $message = "Bye bye!";
