@@ -42,11 +42,11 @@ class App {
     $this->dtv = new \View\DateTimeView();
     $this->imageListView = new \View\ImageListView($this->imageModel);
     $this->uploadImageView = new \View\UploadImageView();
-    $this->registerView = new \View\RegisterView($this->userStorage, $this->session);
+    $this->registerView = new \View\RegisterView($this->userStorage);
     $this->loginView = new \View\LoginView($this->userStorage, $this->session);
     $this->layoutView = new \View\LayoutView();
     
-    $this->uploadController = new \Controller\UploadController($this->session, $this->uploadImageView, $this->imageModel);
+    $this->uploadController = new \Controller\UploadController($this->uploadImageView, $this->imageModel);
     $this->loginController = new \Controller\LoginController($this->session, $this->loginView);
     $this->registerController = new \Controller\RegisterController($this->userStorage, $this->session, $this->registerView);    
 }
@@ -70,11 +70,13 @@ class App {
     private function route() {
         // Load default
         $this->loginController->setLogin();
-        $this->formLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
+        //$this->formLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
+        $this->formLayout = $this->loginView;
 
         if ($this->session->isLoggedIn()) { // LOGGED IN ONLY:
             if ($this->routerView->doesUserWantsUploadImage()) { // upload image
-                $this->uploadImageView->setMessage($this->session->getMessage());
+                $this->uploadController->handleUpload();
+                //$this->uploadImageView->setMessage($this->session->getMessage());
                 $this->formLayout = $this->uploadImageView;
             } 
             if ($this->routerView->doesUserWantsToViewImages()) { // view images
@@ -83,7 +85,7 @@ class App {
         }
         if ($this->routerView->doesUserWantsToRegister()) { // register new user
             $this->registerController->setRegister();
-            $this->registerView->updateMessage($this->session->getMessage());
+            //$this->registerView->updateMessage($this->session->getMessage());
             $this->formLayout = $this->registerView;
         }
     }

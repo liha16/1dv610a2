@@ -7,15 +7,12 @@ require_once('model/ImageList.php');
 
 class UploadController {
 
-    private $session;
-    private $UploadImageView;
+    private $uploadImageView;
     private $imageListModel;
     
-    public function __construct(\Model\SessionStorage $session, \View\UploadImageView $UploadImageView,  \Model\ImageList $imageModel) {
-        $this->session = $session;
-        $this->UploadImageView = $UploadImageView;
+    public function __construct(\View\UploadImageView $UploadImageView,  \Model\ImageList $imageModel) {
+        $this->uploadImageView = $UploadImageView;
         $this->imageListModel = $imageModel;
-        $this->handleUpload();
     }
 
     /**
@@ -23,15 +20,18 @@ class UploadController {
 	 *
      * @return void
 	 */
-    private function handleUpload() {
-        if ($this->UploadImageView->isUploadFormPosted()) {
+    public function handleUpload() {
+        if ($this->uploadImageView->isUploadFormPosted()) {
             try {
-                $fileToUpload = $this->UploadImageView->getFileToUpload();
+                $fileToUpload = $this->uploadImageView->getFileToUpload();
                 $message = $this->imageListModel->uploadImage($fileToUpload);
-                $this->session->setMessage($message);
+                //$this->session->setMessage($message);
+                $this->uploadImageView->setMessage($message);
             } catch (\Exception $e) {
-                $this->session->setMessage($e->getMessage());
+               // $this->session->setMessage($e->getMessage());
+                $this->uploadImageView->setMessage($e->getMessage());
             }
+            
         }
     }
 

@@ -22,6 +22,9 @@ class LoginView {
 		$this->message = $session->getMessage();
 	  }
 
+	  public function setMessage(string $message) {
+		$this->message = $message;	  
+	}
 
 	/**
 	 * Create Form or butto
@@ -33,10 +36,10 @@ class LoginView {
 	public function response(bool $isLoggedIn) {
 
 		if ($isLoggedIn) {
-			$response = $this->generateLoggedInHTML($this->message);
+			$response = $this->generateLoggedInHTML();
 		}
 		else {
-			$response = $this->generateLoginFormHTML($this->message);
+			$response = $this->generateLoginFormHTML();
 		}
 		return $response;
 	}
@@ -46,10 +49,10 @@ class LoginView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	private function generateLoggedInHTML(string $message) : string{
+	private function generateLoggedInHTML() : string{
 		return '
 			<form method="post" action="?" >
-				<p id="' . self::$messageId . '">' . $message .'</p>
+				<p id="' . self::$messageId . '">' . $this->message .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
 			</form><br>
 		';
@@ -61,12 +64,12 @@ class LoginView {
 	* @param $message, String output message
 	* @return string, html form
 	*/
-	private function generateLoginFormHTML(string $message) : string {
+	private function generateLoginFormHTML() : string {
 		return '
 			<form method="post" action="?" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '">' . $message . '</p>
+					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
 					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getRequestUserName() . '" />
@@ -126,7 +129,7 @@ class LoginView {
 	public function doLogout() : string {
 		$this->session->destroyUserSession(); // MessageSession
         $message = "Bye bye!";
-        $this->session->setMessage($message); // MessageSession
+		$this->session->setMessage($message); // MessageSession
         $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
         $this->headerLocation("index.php");
 		
@@ -144,7 +147,7 @@ class LoginView {
         } else {
             $message = "Welcome";                   
         }
-        $this->session->setUserSession($_POST[self::$name]);
+		$this->session->setUserSession($_POST[self::$name]);
         $this->session->setMessage($message); // MessageSession
         $this->headerLocation("index.php");
 	}

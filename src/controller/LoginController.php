@@ -33,8 +33,9 @@ class LoginController {
                 //$this->session->setMessage($message);
                 try {
                     $this->loginView->validateLogin();
+                    //$this->loginView->setMessage();
                 } catch (\Exception $e) {
-                    $this->session->setMessage($e->getMessage());
+                    $this->loginView->setMessage($e->getMessage());
                 }
             } 
         } 

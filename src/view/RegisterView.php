@@ -12,13 +12,12 @@ namespace View;
         private static $passwordMin = 6;
         private $message;
         private $userStorage;
-        //private $session;
 
 
-        public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session) {
+        public function __construct(\Model\UserStorage $userStorage) {
             $this->userStorage = $userStorage;
             //$this->session = $session;
-		    $this->message = $session->getMessage();
+		  //  $this->message = $session->getMessage();
         }
 
         /**

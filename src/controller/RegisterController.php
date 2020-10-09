@@ -32,6 +32,7 @@ class RegisterController {
                 $this->session->setMessage($e->getMessage());
             }
         }
+        $this->registerView->updateMessage($this->session->getMessage());
     }
 
     /**
