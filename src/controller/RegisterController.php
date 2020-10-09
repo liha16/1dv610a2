@@ -8,14 +8,16 @@ require_once('model/User.php');
 class RegisterController {
 
     private $userStorage;
-    private $session;
+    private $userSession;
     private $registerView;
+    private $msgSession;
 
 	
-    public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session, \View\RegisterView $registerView) {
+    public function __construct(\Model\UserStorage $userStorage, \Model\UserSession $userSession, \View\RegisterView $registerView, \View\MessageSession $msgSession) {
         $this->userStorage = $userStorage;
-        $this->session = $session;
+        $this->userSession = $userSession;
         $this->registerView = $registerView;
+        $this->msgSession = $msgSession;
     }
 
     /**
@@ -30,10 +32,10 @@ class RegisterController {
                 $this->isUsernameAvailable();
                 $this->registerUser(); 
             } catch (\Exception $e) {
-                $this->session->setMessage($e->getMessage());
+                $this->msgSession->setMessage($e->getMessage());
             }
         }
-        $this->registerView->updateMessage($this->session->getMessage());
+        $this->registerView->updateMessage($this->msgSession->getMessage());
     }
 
     private function isUsernameAvailable() {
@@ -66,8 +68,8 @@ class RegisterController {
         $newUser->setPassword($this->registerView->getPassword());
         $this->userStorage->saveNewUser($newUser);
         $message = "Registered new user."; // TODO exceptions
-        $this->session->destroyUserSession(); // logs out if user wants to register
-        $this->session->setMessage($message);
+        $this->userSession->destroyUserSession(); // logs out if user wants to register
+        $this->msgSession->setMessage($message);
         $this->headerLocation("index.php");
     }
 

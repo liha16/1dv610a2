@@ -2,8 +2,7 @@
 
 namespace View;
 
-    class MessageStorage { 
-        // Handles SESSION messages 
+    class MessageSession { 
 
         private static $sessionMessage = "message";
 

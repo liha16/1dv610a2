@@ -12,15 +12,18 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $userStorage;
-	private $session;
+	private $userSession;
+	private $msgSession;
 	private $message;
 
-	public function __construct(\Model\UserStorage $userStorage, \Model\SessionStorage $session) 
+	public function __construct(\Model\UserStorage $userStorage, \Model\UserSession $userSession, \View\MessageSession $msgSession) 
 	  {
 		$this->userStorage = $userStorage;
-		$this->session = $session;
-		$this->message = $session->getMessage();
+		$this->userSession = $userSession;
+		$this->msgSession = $msgSession;
+		$this->message = $msgSession->getMessage();
 	  }
+
 
 	  public function setMessage(string $message) {
 		$this->message = $message;	  
@@ -127,10 +130,10 @@ class LoginView {
 	}
 
 	public function doLogout() : string {
-		$this->session->destroyUserSession(); // MessageSession
+		$this->userSession->destroyUserSession();
         $message = "Bye bye!";
-		$this->session->setMessage($message); // MessageSession
-        $this->session->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
+		$this->msgSession->setMessage($message); // MessageSession
+        $this->userSession->unsetLoginCookie(self::$cookieName, self::$cookiePassword);
         $this->headerLocation("index.php");
 		
 	}
@@ -147,22 +150,22 @@ class LoginView {
         } else {
             $message = "Welcome";                   
         }
-		$this->session->setUserSession($_POST[self::$name]);
-        $this->session->setMessage($message); // MessageSession
+		$this->userSession->setUserSession($_POST[self::$name]);
+        $this->msgSession->setMessage($message); // MessageSession
         $this->headerLocation("index.php");
 	}
 	
 	private function setLoginCookie() { // Not finished yet
         $hashPass = $this->userStorage->hashPassword($_POST[self::$password]);
-        $this->session->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
+        $this->userSession->setLoginCookie(self::$cookieName, $_POST[self::$name], self::$cookiePassword, $hashPass);
 	}
 	
 	public function isRememberedCookie() {
-		return $this->session->isRemembered(self::$cookieName);
+		return $this->userSession->isRemembered(self::$cookieName);
 	}
 	
 	public function setUserSession() {
-		$this->session->setUserSession($_COOKIE[self::$cookieName]);
+		$this->userSession->setUserSession($_COOKIE[self::$cookieName]);
 	}
 	
 	/**

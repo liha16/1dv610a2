@@ -13,16 +13,16 @@ require_once('view/ImageListView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('view/RouterView.php');
-require_once('view/MessageStorage.php');
+require_once('view/MessageSession.php');
 require_once('model/UserStorage.php');
-require_once('model/SessionStorage.php');
+require_once('model/UserSession.php');
 
 class App {
 
     
-    private $session;
+    private $userSession;
     private $userStorage;
-    private $formLayout;
+    private $pageLayout;
     private $uploadImageView;
     private $viewImages;
     private $loginView;
@@ -33,22 +33,22 @@ class App {
 
 	public function __construct() {
     
-    $this->session = new \Model\SessionStorage();
+    $this->userSession = new \Model\UserSession();
     $this->userStorage = new \Model\UserStorage();
     $this->imageModel = new \Model\ImageList();
 
-    $this->messageStorage = new \View\MessageStorage();
+    $this->messageSession = new \View\MessageSession();
     $this->routerView = new \View\RouterView();
     $this->dtv = new \View\DateTimeView();
     $this->imageListView = new \View\ImageListView($this->imageModel);
     $this->uploadImageView = new \View\UploadImageView();
     $this->registerView = new \View\RegisterView();
-    $this->loginView = new \View\LoginView($this->userStorage, $this->session);
+    $this->loginView = new \View\LoginView($this->userStorage, $this->userSession, $this->messageSession);
     $this->layoutView = new \View\LayoutView();
     
     $this->uploadController = new \Controller\UploadController($this->uploadImageView, $this->imageModel);
-    $this->loginController = new \Controller\LoginController($this->session, $this->loginView);
-    $this->registerController = new \Controller\RegisterController($this->userStorage, $this->session, $this->registerView);    
+    $this->loginController = new \Controller\LoginController($this->userSession, $this->loginView, $this->messageSession);
+    $this->registerController = new \Controller\RegisterController($this->userStorage, $this->userSession, $this->registerView, $this->messageSession);    
 }
 
     /**
@@ -58,8 +58,8 @@ class App {
 	 */
     public function run() {
         $this->route();
-        $this->layoutView->render($this->session->isLoggedIn(), $this->formLayout, $this->dtv, $this->routerView); 
-        $this->session->unsetMessage(); //Unsets all flash messages
+        $this->layoutView->render($this->userSession->isLoggedIn(), $this->pageLayout, $this->dtv, $this->routerView); 
+        $this->messageSession->unsetMessage(); //Unsets all flash messages
     }
 
     /**
@@ -70,23 +70,23 @@ class App {
     private function route() {
         // Load default
         $this->loginController->setLogin();
-        //$this->formLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
-        $this->formLayout = $this->loginView;
+        //$this->pageLayout = new \View\LoginView($this->userStorage, $this->session); // TODO BORT
+        $this->pageLayout = $this->loginView;
 
-        if ($this->session->isLoggedIn()) { // LOGGED IN ONLY:
+        if ($this->userSession->isLoggedIn()) { // LOGGED IN ONLY:
             if ($this->routerView->doesUserWantsUploadImage()) { // upload image
                 $this->uploadController->handleUpload();
                 //$this->uploadImageView->setMessage($this->session->getMessage());
-                $this->formLayout = $this->uploadImageView;
+                $this->pageLayout = $this->uploadImageView;
             } 
             if ($this->routerView->doesUserWantsToViewImages()) { // view images
-                $this->formLayout = $this->imageListView;
+                $this->pageLayout = $this->imageListView;
             } 
         }
         if ($this->routerView->doesUserWantsToRegister()) { // register new user
             $this->registerController->setRegister();
             //$this->registerView->updateMessage($this->session->getMessage());
-            $this->formLayout = $this->registerView;
+            $this->pageLayout = $this->registerView;
         }
     }
 

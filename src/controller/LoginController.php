@@ -4,13 +4,15 @@ namespace Controller;
 
 class LoginController {
 
-    private $session;
+    private $userSession;
     private $loginView;
+    private $msgSession;
     
 
-    public function __construct(\Model\SessionStorage $session, \View\LoginView $loginView) {
-        $this->session = $session;
+    public function __construct(\Model\UserSession $userSession, \View\LoginView $loginView, \View\MessageSession $msgSession) {
+        $this->userSession = $userSession;
         $this->loginView = $loginView;
+        $this->msgSession = $msgSession;
     }
 
     /**
@@ -23,12 +25,12 @@ class LoginController {
             $this->useRemembered();
         }
         if ($this->loginView->doesUserWantsToLogOut()) { // try to log out 
-            if ($this->session->isLoggedIn()) {
+            if ($this->userSession->isLoggedIn()) {
                 $this->loginView->doLogout();
             } 
         }
         if ($this->loginView->doesUserWantsToLogIn()) { // try to log in
-            if (!$this->session->isLoggedIn()) {
+            if (!$this->userSession->isLoggedIn()) {
                 //$message = $this->loginView->validateLogin();
                 //$this->session->setMessage($message);
                 try {
@@ -47,9 +49,9 @@ class LoginController {
      * @return void, BUT writes to cookies and session!
 	 */
     private function useRemembered() {
-        if (!$this->session->issetMessage()) {
+        if (!$this->msgSession->issetMessage()) {
             $message = "Welcome back with cookie";
-            $this->session->setMessage($message);
+            $this->msgSession->setMessage($message);
         }
         $this->loginView->setUserSession();
         // Future: authenticate with cookies

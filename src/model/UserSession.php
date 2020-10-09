@@ -2,12 +2,9 @@
 
 namespace Model;
 
-class SessionStorage {
-
-    // TODO: make only login session here
+class UserSession {
 
     private static $cookieDuration = 60 * 60 * 24 * 30; // 30 days  
-    private static $sessionMessage = "message";
     private static $sessionUser = "user";
 
     /**
@@ -43,43 +40,6 @@ class SessionStorage {
     }
 
     /**
-    * Get the (flash) message saved i session
-    *
-	* @return string, message saved in session
-	*/
-    public function getMessage() : string {
-        $message = "";
-        if (isset($_SESSION[self::$sessionMessage])) {
-            $message = $_SESSION[self::$sessionMessage];
-        }
-        return $message;
-    }
-
-    /**
-    * Unset the (flash) message saved in session
-    *
-	* @return void, but changes session 
-	*/
-    public function unsetMessage() {
-        if (isset($_SESSION[self::$sessionMessage])) {
-            unset($_SESSION[self::$sessionMessage]);
-        }
-    }
-
-    /**
-    * Checks if (flash) message is set
-    *
-	* @return bool
-	*/
-    public function issetMessage() : bool {
-        if (isset($_SESSION[self::$sessionMessage])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
 	 * Checks if there is a cookie saved with credentials
 	 *
      * @return bool 
@@ -105,15 +65,6 @@ class SessionStorage {
         } else {
             return false;
         }
-    }
-
-    /**
-    * Set the (flash) message in session
-    * @param $message, message to save
-	* @return void, but changes session 
-	*/
-    public function setMessage(string $message) {
-        $_SESSION[self::$sessionMessage] = $message;
     }
 
     /**
