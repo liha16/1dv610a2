@@ -10,16 +10,16 @@ class User {
     private static $passwordMin = 6;
 
 
-    public function setName($username) {
-        if(strlen($username) < $this->userNameMin){
-            throw new \Exception('$username must ' . $this->userNameMin . ' characters long!');
+    public function setName(string $username) {
+        if(strlen($username) < self::$userNameMin){
+            throw new \Exception('$username must ' . self::$userNameMin . ' characters long!');
         }
         $this->username = $this->filterInput($username);
     }
 
-    public function setPassword($password) {
-        if(strlen($password) < $this->passwordMin){
-            throw new \Exception('$password must ' . $this->passwordMin . ' characters long!');
+    public function setPassword(string $password) {
+        if(strlen($password) < self::$passwordMin){
+            throw new \Exception('$password must ' . self::$passwordMin . ' characters long!');
         }
         $this->password = $this->filterInput($password);
     }

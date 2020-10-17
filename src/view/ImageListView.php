@@ -28,6 +28,4 @@ class ImageListView {
         }
         return $html;
 	}
-
-	
 }

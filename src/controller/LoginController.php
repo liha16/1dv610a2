@@ -8,7 +8,6 @@ class LoginController {
     private $loginView;
     private $msgSession;
     
-
     public function __construct(\Model\UserSession $userSession, \View\LoginView $loginView, \View\MessageSession $msgSession) {
         $this->userSession = $userSession;
         $this->loginView = $loginView;
@@ -54,5 +53,4 @@ class LoginController {
         // Future: authenticate with cookies
     }
 
-    
 }

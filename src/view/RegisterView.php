@@ -24,7 +24,7 @@ namespace View;
         /**
          * Updates session message to view     
          * */
-        public function updateMessage($message) {
+        public function updateMessage(string $message) {
             $this->message = $message;
         }
 

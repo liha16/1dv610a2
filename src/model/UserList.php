@@ -17,10 +17,9 @@ class UserList {
       $jsonContents = file_get_contents(self::$storageFile);
       $this->users = json_decode($jsonContents, true);
     } else {
-        throw new \Exception("No file " . $this->storageFile . " found on server");
+        throw new \Exception("No file " . self::$storageFile . " found on server");
         // Never catched but will cause and error
     }
-    
   }
 
   /**
@@ -61,7 +60,6 @@ class UserList {
     }
 }
 
-
    /**
 	 * Converts to HTML entieties and erases blank spaces
 	 */
@@ -94,18 +92,14 @@ class UserList {
     } else {
         return false;
     }
-}
+  }
 
    /**
 	 * Hashes a password, returns a hashed version of it
 	 *
 	 */
-  public function hashPassword($password) : string {
+  public function hashPassword(string $password) : string {
       return password_hash($password, PASSWORD_DEFAULT);
   }
-
-
 }
-
-
 ?>

@@ -27,3 +27,13 @@ Running app on [link](http://casaolive.es/1dv610/index.php).
 Upload the source catalog to a php server. 7.0.0 was used to create and test the app. Other versions of php might cause errors.
 
 Add an .htaccess file that prohibits view of files not desired.
+
+
+
+### Improvement (suggestions)
+
+(not implemented)
+
+- Make a separate class for "image"
+- Make exceptions custom classes 
+- More excepttions, wrap the wole app?

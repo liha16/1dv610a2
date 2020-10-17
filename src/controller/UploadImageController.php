@@ -4,7 +4,6 @@ namespace Controller;
 
 require_once('model/ImageList.php');
 
-
 class UploadImageController {
 
     private $uploadImageView;
@@ -34,5 +33,4 @@ class UploadImageController {
     }
 
 }
-
 ?>

@@ -24,8 +24,7 @@ class LoginView {
 		$this->message = $msgSession->getMessage();
 	  }
 
-
-	  public function setMessage(string $message) { // sets this views current message
+	public function setMessage(string $message) { // sets this views current message
 		$this->message = $message;	  
 	}
 
@@ -37,7 +36,6 @@ class LoginView {
 	 * @return  string HTML Form or button
 	 */
 	public function response(bool $isLoggedIn) : string {
-
 		if ($isLoggedIn) {
 			$response = $this->generateLoggedInHTML();
 		}

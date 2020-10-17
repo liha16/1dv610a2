@@ -79,11 +79,9 @@ class UserSession {
     * Unsets user session (log out)
 	* @return void, but changes session 
 	*/
-    public function destroyUserSession()
-    {
+    public function destroyUserSession() {
         unset($_SESSION[self::$sessionUser]);
         $_SESSION[self::$sessionUser] = null;
-  
     }
 
 }

@@ -11,7 +11,6 @@ class RegisterController {
     private $userSession;
     private $registerView;
     private $msgSession;
-
 	
     public function __construct(\Model\UserList $userList, \Model\UserSession $userSession, \View\RegisterView $registerView, \View\MessageSession $msgSession) {
         $this->userList = $userList;
@@ -55,8 +54,6 @@ class RegisterController {
         exit();
     }
 
-    
-
     /**
 	 * Creates new user object and saves to Storage
 	 *
@@ -78,8 +75,5 @@ class RegisterController {
         $this->msgSession->setMessage($message);
         $this->headerLocation("index.php");
     }
-
-
 }
-
 ?>
