@@ -12,7 +12,7 @@ class ImageList {
 
     public function __construct() {
         if (is_dir($this->target_dir)) {
-           $this->images = array_slice(scandir($this->target_dir), 3); // 3 is to delete . and .. files (not very secure method)
+           $this->images = array_slice(scandir($this->target_dir), 2); // 3 is to delete . and .. files (not very secure method)
         // TODO: Check iso that scandir returns array and not false
         } else {
             throw new \Exception("No folder " . $this->target_dir . " found on server");
